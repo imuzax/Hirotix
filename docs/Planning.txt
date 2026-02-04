@@ -1,0 +1,70 @@
+Hirotix Backend - 1 Week Implementation Roadmap
+Goal
+Submit a complete, industry-standard Backend for the "Intelligent AI-Powered Job Portal" in 1 Week.
+
+Architecture
+Frontend <--> Spring Boot (Backend) <--> Database (MySQL) ^ | Python AI Service
+
+Phase 1: Identity & Profiles (Day 1-2)
+Goal: Secure system with Roles and detailed Profiles.
+
+Roles & Security
+
+Update 
+User
+ entity to include Role (ADMIN, RECRUITER, SEEKER).
+Implement Login/Register APIs.
+Decision Needed: Simple Session Auth or JWT? (JWT recommended for independent Frontend).
+Profiles
+
+Create Profile entity linked to User.
+Fields: Skills, Education, Experience, Location, Title.
+API: GET /api/profile, PUT /api/profile.
+Phase 2: Jobs & Applications (Day 3-4)
+Goal: Core Job Portal functionality.
+
+Recruiter Features
+
+Update 
+Job
+ entity: Link to 
+User
+ (Recruiter), Salary, Job Type, Experience Level.
+API: POST /api/jobs (Only Recruiters).
+API: GET /api/jobs/my-jobs (Jobs posted bylogged-in recruiter).
+Job Applications
+
+Create Application entity.
+Link: 
+User
+ (Seeker) <--> 
+Job
+.
+Fields: Status (APPLIED, SHORTLISTED, REJECTED), AppliedDate.
+API: POST /api/jobs/{id}/apply.
+API: GET /api/applications (Seeker view).
+API: GET /api/jobs/{id}/applications (Recruiter view).
+Phase 3: Search & Files (Day 5)
+Goal: Discoverability and Resume handling.
+
+Search
+
+Filter Jobs by Location, Title, Skills.
+API: GET /api/jobs/search?query=java&location=pune.
+Resume Upload
+
+API: POST /api/users/resume.
+Storage: Save PDF to local uploads folder.
+DB: Store file path in Profile.
+Phase 4: AI Bridge (Day 6-7)
+Goal: Prepare Backend to talk to AI.
+
+AI Integration Service
+Java Service using RestTemplate or WebClient.
+API: POST /api/ai/parse-resume -> Calls Python.
+API: POST /api/ai/match-jobs -> Calls Python.
+Technical Checklist (Best Practices)
+ Use DTOs (Data Transfer Objects) instead of exposing Entities directly.
+ Global Exception Handling (@ControllerAdvice).
+ CORS Configuration (to allow Frontend to connect).
+ Service Layer Logic separation.
