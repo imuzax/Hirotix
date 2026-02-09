@@ -22,5 +22,18 @@ public class Job {
 
     private String location;
 
+
     private String description;
+
+    private String salary;
+
+    private String jobType; // FULL_TIME, PART_TIME, CONTRACT
+
+    private String experienceLevel; // ENTRY, MID, SENIOR
+
+    private java.time.LocalDateTime postedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "recruiter_id")
+    private User recruiter;
 }
