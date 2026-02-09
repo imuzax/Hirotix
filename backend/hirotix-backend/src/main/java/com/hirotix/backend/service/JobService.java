@@ -15,8 +15,16 @@ public class JobService {
         this.jobRepository = jobRepository;
     }
 
+
     public Job saveJob(Job job) {
+        if (job.getPostedDate() == null) {
+            job.setPostedDate(java.time.LocalDateTime.now());
+        }
         return jobRepository.save(job);
+    }
+
+    public List<Job> getJobsByRecruiter(com.hirotix.backend.entity.User recruiter) {
+        return jobRepository.findByRecruiter(recruiter);
     }
 
     public List<Job> getAllJobs() {
