@@ -27,6 +27,10 @@ public class JobService {
         return jobRepository.findByRecruiter(recruiter);
     }
 
+    public List<Job> searchJobs(String query, String location) {
+        return jobRepository.searchJobs(query, location);
+    }
+
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
     }

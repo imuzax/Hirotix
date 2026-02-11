@@ -35,4 +35,14 @@ public class ProfileController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // User not found
         }
     }
+
+    @PostMapping("/{userId}/resume")
+    public ResponseEntity<Profile> uploadResume(@PathVariable Long userId, @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        Profile updatedProfile = profileService.uploadResume(userId, file);
+        if (updatedProfile != null) {
+            return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

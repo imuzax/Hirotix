@@ -49,6 +49,12 @@ public class JobController {
         return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Job>> searchJobs(@RequestParam(required = false) String query,
+                                                @RequestParam(required = false) String location) {
+        return new ResponseEntity<>(jobService.searchJobs(query, location), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable Long id) {
         Job job = jobService.getJobById(id);
