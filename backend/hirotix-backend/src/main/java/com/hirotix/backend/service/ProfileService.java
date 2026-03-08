@@ -54,4 +54,8 @@ public class ProfileService {
         }
         return null;
     }
+
+    public Profile saveProfile(Profile profile) {
+        return profileRepository.save(profile);
+    }
 }

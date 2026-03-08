@@ -19,3 +19,4 @@ public interface JobRepository extends JpaRepository<Job, Long> {
            "AND (:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%')))")
     List<Job> searchJobs(@Param("query") String query, @Param("location") String location);
 }
+
