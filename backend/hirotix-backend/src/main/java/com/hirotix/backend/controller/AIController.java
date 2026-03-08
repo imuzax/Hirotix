@@ -64,4 +64,23 @@ public class AIController {
 
         return ResponseEntity.ok(matchResults);
     }
+
+    @GetMapping("/mock-interview/{userId}/{jobId}")
+    public ResponseEntity<Map<String, Object>> generateMockInterview(@PathVariable Long userId, @PathVariable Long jobId) {
+        Profile profile = profileService.getProfileByUserId(userId);
+        if (profile == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Job job = jobService.getJobById(jobId);
+        if (job == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String skills = profile.getSkills() != null ? profile.getSkills() : "General skills";
+        Map<String, Object> aiResponse = aiService.generateMockInterview(job.getTitle(), skills);
+        
+        return ResponseEntity.ok(aiResponse);
+    }
 }
+

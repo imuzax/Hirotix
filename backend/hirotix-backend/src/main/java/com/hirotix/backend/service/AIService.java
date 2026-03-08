@@ -66,4 +66,47 @@ public class AIService {
             throw new RuntimeException("AI Service Error: " + e.getMessage());
         }
     }
+
+    public Map<String, Object> chat(String message) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("message", message);
+
+        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    PYTHON_SERVICE_URL + "/chat",
+                    entity,
+                    Map.class
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            throw new RuntimeException("AI Chat Error: " + e.getMessage());
+        }
+    }
+
+    public Map<String, Object> generateMockInterview(String jobTitle, String skills) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("job_title", jobTitle);
+        requestBody.put("skills", skills);
+
+        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    PYTHON_SERVICE_URL + "/mock-interview",
+                    entity,
+                    Map.class
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            throw new RuntimeException("AI Mock Interview Error: " + e.getMessage());
+        }
+    }
 }
