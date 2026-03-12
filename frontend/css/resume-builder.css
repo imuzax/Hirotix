@@ -1,0 +1,222 @@
+/* Resume Builder Base Styles */
+.builder-container {
+    max-width: 1400px !important;
+}
+
+.builder-split {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 30px;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.builder-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Editor Pane */
+.editor-pane {
+    padding: 30px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    background: white !important;
+}
+
+.editor-section {
+    margin-bottom: 32px;
+}
+
+.editor-section h3 {
+    font-size: 1.1rem;
+    color: var(--primary-text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 8px;
+}
+
+.editor-section h3 ion-icon {
+    color: var(--accent-color);
+}
+
+.dynamic-item {
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    border: 1px dashed rgba(0, 0, 0, 0.1) !important;
+}
+
+.dynamic-item .form-control {
+    margin-bottom: 10px;
+}
+
+/* Preview Pane */
+.preview-pane {
+    position: sticky;
+    top: 20px;
+    display: flex;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.02);
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.resume-paper {
+    width: 210mm;
+    /* A4 Width */
+    min-height: 297mm;
+    /* A4 Height */
+    background: white;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    transform: scale(0.65);
+    /* Scale down for screen preview */
+    transform-origin: top center;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* --- TEMPLATE: MODERN --- */
+.resume-paper.modern {
+    font-family: 'Outfit', sans-serif;
+    color: #333;
+}
+
+.modern .res-header {
+    border-bottom: 3px solid var(--accent-color);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.modern .res-name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-text);
+    letter-spacing: -0.04em;
+}
+
+.modern .res-title {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.modern .res-contact {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 10px;
+}
+
+.modern h4 {
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    color: var(--accent-color);
+    margin: 25px 0 15px;
+}
+
+.modern .exp-item,
+.modern .edu-item {
+    margin-bottom: 20px;
+}
+
+.modern .item-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    color: #1a1a1b;
+}
+
+/* --- TEMPLATE: PROFESSIONAL --- */
+.resume-paper.professional {
+    font-family: 'Times New Roman', serif;
+    color: #111;
+    transform: scale(0.65);
+}
+
+.professional .res-header {
+    text-align: center;
+    border-bottom: 1px solid #000;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.professional .res-name {
+    font-size: 2.2rem;
+    font-weight: 400;
+}
+
+.professional h4 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    margin: 20px 0 10px;
+    font-weight: bold;
+}
+
+/* --- TEMPLATE: CREATIVE --- */
+.resume-paper.creative {
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    transform: scale(0.65);
+}
+
+.creative .res-sidebar {
+    background: #1d1d1f;
+    color: white;
+    padding: 40px 25px;
+}
+
+.creative .res-main {
+    padding: 40px;
+}
+
+.creative .res-name {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+/* Print Optimization */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #resumePreview,
+    #resumePreview * {
+        visibility: visible;
+    }
+
+    #resumePreview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: scale(1) !important;
+        box-shadow: none;
+        width: 100%;
+        margin: 0;
+    }
+
+    .dashboard-layout {
+        display: block;
+        padding: 0 !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+    .builder-split {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-pane {
+        overflow-x: auto;
+    }
+}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiro AI Studio - Hirotix</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="js/theme.js"></script>
+</head>
+
+<body>
+    <div class="ai-studio-container">
+        <!-- Persistent Sidebar -->
+        <aside class="chat-sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-brand">
+                    <div class="brand-icon" style="width: 32px; height: 32px; border-radius: 8px;"></div>
+                    <span class="brand-text" style="font-size: 1.4rem;">Hirotix<span class="brand-dot">.</span></span>
+                </a>
+            </div>
+
+            <button class="new-chat-btn" onclick="resetChat()">
+                <ion-icon name="add-outline"></ion-icon> New Chat
+            </button>
+
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <div class="nav-label">General</div>
+                    <a href="seeker-dashboard.html" class="sidebar-btn">
+                        <ion-icon name="apps-outline"></ion-icon> Dashboard
+                    </a>
+                    <a href="resume-builder.html" class="sidebar-btn">
+                        <ion-icon name="document-text-outline"></ion-icon> Resume Builder
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-label">Actions</div>
+                    <button class="sidebar-btn" id="downloadChatBtn">
+                        <ion-icon name="download-outline"></ion-icon> Save Conversation
+                    </button>
+                    <button class="sidebar-btn" onclick="resetChat()" style="color: #ff3b30;">
+                        <ion-icon name="trash-outline"></ion-icon> Clear Memory
+                    </button>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="sidebar-btn theme-switcher" id="themeToggle" onclick="toggleTheme()"
+                    style="margin-bottom: 10px;">
+                    <ion-icon name="moon-outline"></ion-icon> Dark Mode
+                </button>
+                <button onclick="logout()" class="sidebar-btn">
+                    <ion-icon name="log-out-outline"></ion-icon> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat Canvas -->
+        <main class="chat-main">
+            <div class="chat-history-container" id="scrollContainer">
+                <div class="history-inner" id="chatHistory">
+                    <!-- Messages render here -->
+                </div>
+            </div>
+
+            <!-- Focused Input Area -->
+            <div class="chat-input-container">
+                <form id="chatForm" class="input-box-wrapper">
+                    <input type="text" id="chatInput" class="chat-input-field"
+                        placeholder="Ask anything or start a mock interview..." autocomplete="off" required>
+                    <button type="submit" class="send-trigger" id="sendBtn">
+                        <ion-icon name="arrow-up-outline"></ion-icon>
+                    </button>
+                </form>
+                <div style="text-align: center; margin-top: 12px; font-size: 0.75rem; color: #999;">
+                    Hiro AI can make mistakes. Check important info.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        const chatHistory = document.getElementById('chatHistory');
+        const scrollContainer = document.getElementById('scrollContainer');
+        const chatForm = document.getElementById('chatForm');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        const user = getCurrentUser();
+        if (!user) { window.location.href = 'login.html'; }
+
+        let chatMessages = [];
+
+        // Load Memory
+        function loadMemory() {
+            const saved = localStorage.getItem(`chat_memory_${user.id}`);
+            if (saved) {
+                chatMessages = JSON.parse(saved);
+                renderHistory();
+            } else {
+                showInitialGreeting();
+            }
+        }
+
+        function showInitialGreeting() {
+            const greeting = `Hello **${user.fullName}**! 👋 \n\nI am your **Advanced Hiro AI**. I am now directly connected to the Hirotix Job Database and I have **Conversation Memory**.\n\nYou can ask me:\n1. **"What jobs are available right now?"**\n2. **"Start a mock interview for [Job Name]"**\n3. **"Show me profiles of top jobs"**\n\nHow can I help you today?`;
+            addAIMessage(greeting);
+        }
+
+        function renderHistory() {
+            chatHistory.innerHTML = '';
+            chatMessages.forEach(msg => {
+                if (msg.role === 'user') appendUserUI(msg.content);
+                else appendAIUI(msg.content);
+            });
+            scrollToBottom();
+        }
+
+        function appendUserUI(text) {
+            const html = `
+                <div class="message user">
+                    <div class="msg-avatar">U</div>
+                    <div class="message-content">${text}</div>
+                </div>
+            `;
+            chatHistory.insertAdjacentHTML('beforeend', html);
+        }
+
+        function appendAIUI(text) {
+            const html = `
+                <div class="message ai">
+                    <div class="msg-avatar"><ion-icon name="sparkles"></ion-icon></div>
+                    <div class="message-content">${marked.parse(text)}</div>
+                </div>
+            `;
+            chatHistory.insertAdjacentHTML('beforeend', html);
+        }
+
+        marked.setOptions({ breaks: true, gfm: true });
+
+        function scrollToBottom() {
+            scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' });
+        }
+
+        function addUserMessage(text) {
+            appendUserUI(text);
+            chatMessages.push({ role: 'user', content: text });
+            saveMemory();
+            scrollToBottom();
+        }
+
+        async function addAIMessage(text) {
+            const typingEl = document.getElementById('typingIndicator');
+            if (typingEl) typingEl.remove();
+
+            const messageId = 'ai-msg-' + Date.now();
+            const html = `
+                <div class="message ai">
+                    <div class="msg-avatar"><ion-icon name="sparkles"></ion-icon></div>
+                    <div class="message-content" id="${messageId}"></div>
+                </div>
+            `;
+            chatHistory.insertAdjacentHTML('beforeend', html);
+            const bubble = document.getElementById(messageId);
+
+            const words = text.split(' ');
+            let currentText = '';
+            for (let i = 0; i < words.length; i++) {
+                currentText += words[i] + ' ';
+                bubble.innerHTML = marked.parse(currentText);
+                scrollToBottom();
+                await new Promise(r => setTimeout(r, 20));
+            }
+            chatMessages.push({ role: 'assistant', content: text });
+            saveMemory();
+        }
+
+        function saveMemory() {
+            if (chatMessages.length > 30) chatMessages = chatMessages.slice(-30);
+            localStorage.setItem(`chat_memory_${user.id}`, JSON.stringify(chatMessages));
+        }
+
+        function showTyping() {
+            const html = `
+                <div class="message ai" id="typingIndicator">
+                    <div class="msg-avatar"><ion-icon name="sparkles"></ion-icon></div>
+                    <div class="message-content">
+                        <div class="typing-pill">
+                            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatHistory.insertAdjacentHTML('beforeend', html);
+            scrollToBottom();
+        }
+
+        loadMemory();
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            chatInput.value = '';
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+
+            showTyping();
+
+            try {
+                const reply = await sendChatMessage(user.id, message, chatMessages.slice(0, -1));
+                await addAIMessage(reply);
+            } catch (error) {
+                console.error("Chat error:", error);
+                await addAIMessage("⚠️ **Connection Error**: AI unreachable. Check Python service.");
+            } finally {
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
+            }
+        });
+
+        function resetChat() {
+            if (confirm("Reset current conversation?")) {
+                chatHistory.innerHTML = '';
+                chatMessages = [];
+                localStorage.removeItem(`chat_memory_${user.id}`);
+                showInitialGreeting();
+            }
+        }
+
+        document.getElementById('downloadChatBtn').addEventListener('click', () => {
+            if (chatMessages.length === 0) return alert("Nothing to save!");
+            const textContent = chatMessages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n\n---\n\n');
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Hirotix_AI_Session_${new Date().toISOString().slice(0, 10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        function logout() {
+            localStorage.removeItem('hirotix_user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>

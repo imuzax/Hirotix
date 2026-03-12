@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder | Hirotix AI</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/resume-builder.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="js/theme.js"></script>
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <a href="index.html" class="logo-brand">
+                    <div class="brand-icon" style="width: 36px; height: 36px;"></div>
+                    <span class="brand-text" style="font-size: 1.5rem;">Hirotix<span class="brand-dot">.</span></span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item-btn" onclick="window.location.href='seeker-dashboard.html'">
+                    <ion-icon name="grid-outline" class="nav-icon"></ion-icon>
+                    Dashboard
+                </button>
+                <button class="nav-item-btn active">
+                    <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
+                    Resume Builder
+                </button>
+                <button class="nav-item-btn" onclick="window.location.href='mock-interview.html'">
+                    <ion-icon name="chatbubbles-outline" class="nav-icon"></ion-icon>
+                    AI Chat Studio
+                </button>
+            </nav>
+
+            <div class="user-profile-mini">
+                <div class="user-avatar" id="userInitials">U</div>
+                <div class="user-info-mini">
+                    <h4 id="userNameDisplay">User Name</h4>
+                    <p id="userRoleDisplay">Job Seeker</p>
+                </div>
+            </div>
+
+            <button class="nav-item-btn theme-switcher" id="themeToggle" onclick="toggleTheme()"
+                style="margin-top: auto;">
+                <ion-icon name="moon-outline" class="nav-icon"></ion-icon>
+                Dark Mode
+            </button>
+            <button class="logout-btn" onclick="handleLogout()">
+                <ion-icon name="log-out-outline"></ion-icon>
+                Logout
+            </button>
+        </aside>
+
+        <!-- Main Content (Resume Builder) -->
+        <main class="main-content builder-container">
+            <header class="view-header">
+                <div>
+                    <h2>Resume Builder</h2>
+                    <p style="color: var(--secondary-text);">Create a professional resume in minutes with AI-ready
+                        templates.</p>
+                </div>
+                <div class="builder-actions">
+                    <select id="templateSelector" class="form-control" style="width: 180px;">
+                        <option value="modern">Modern Minimal</option>
+                        <option value="professional">Executive Pro</option>
+                        <option value="creative">Creative Edge</option>
+                    </select>
+                    <button class="btn btn-accent" onclick="exportToPDF()">
+                        <ion-icon name="download-outline" style="margin-right: 8px;"></ion-icon>
+                        Download PDF
+                    </button>
+                </div>
+            </header>
+
+            <div class="builder-split">
+                <!-- Editor Pane -->
+                <div class="editor-pane card">
+                    <div class="editor-section">
+                        <h3><ion-icon name="person-outline"></ion-icon> Personal Information</h3>
+                        <div class="grid-2">
+                            <input type="text" id="fullName" class="form-control" placeholder="Full Name"
+                                oninput="updatePreview()">
+                            <input type="text" id="jobTitle" class="form-control" placeholder="Target Job Title"
+                                oninput="updatePreview()">
+                            <input type="email" id="email" class="form-control" placeholder="Email Address"
+                                oninput="updatePreview()">
+                            <input type="text" id="phone" class="form-control" placeholder="Phone Number"
+                                oninput="updatePreview()">
+                            <input type="text" id="location" class="form-control"
+                                placeholder="Location (e.g. Pune, India)" oninput="updatePreview()">
+                            <input type="text" id="website" class="form-control" placeholder="LinkedIn / Portfolio"
+                                oninput="updatePreview()">
+                        </div>
+                    </div>
+
+                    <div class="editor-section">
+                        <h3><ion-icon name="briefcase-outline"></ion-icon> Work Experience</h3>
+                        <div id="experienceList">
+                            <div class="dynamic-item card">
+                                <input type="text" class="form-control exp-title" placeholder="Company Name"
+                                    oninput="updatePreview()">
+                                <input type="text" class="form-control exp-role" placeholder="Role (e.g. Senior Dev)"
+                                    oninput="updatePreview()">
+                                <div class="grid-2">
+                                    <input type="text" class="form-control exp-date"
+                                        placeholder="Duration (e.g. 2021 - Present)" oninput="updatePreview()">
+                                </div>
+                                <textarea class="form-control exp-desc"
+                                    placeholder="Key responsibilities and achievements..." oninput="updatePreview()"
+                                    rows="3"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline btn-small" onclick="addItem('experience')">+ Add
+                            Experience</button>
+                    </div>
+
+                    <div class="editor-section">
+                        <h3><ion-icon name="school-outline"></ion-icon> Education</h3>
+                        <div id="educationList">
+                            <div class="dynamic-item card">
+                                <input type="text" class="form-control edu-school" placeholder="University / School"
+                                    oninput="updatePreview()">
+                                <input type="text" class="form-control edu-degree" placeholder="Degree (e.g. B.Tech CS)"
+                                    oninput="updatePreview()">
+                                <input type="text" class="form-control edu-date" placeholder="Year of Graduation"
+                                    oninput="updatePreview()">
+                            </div>
+                        </div>
+                        <button class="btn btn-outline btn-small" onclick="addItem('education')">+ Add
+                            Education</button>
+                    </div>
+
+                    <div class="editor-section">
+                        <h3><ion-icon name="construct-outline"></ion-icon> Skills</h3>
+                        <textarea id="skillsInput" class="form-control"
+                            placeholder="Technical Skills (comma separated: Java, React, SQL...)"
+                            oninput="updatePreview()" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Preview Pane -->
+                <div class="preview-pane">
+                    <div id="resumePreview" class="resume-paper modern">
+                        <!-- Preview content injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/resume-builder.js"></script>
+    <script>
+        // Init user info
+        const user = getCurrentUser();
+        if (user) {
+            document.getElementById('userNameDisplay').textContent = user.fullName;
+            document.getElementById('userInitials').textContent = user.fullName.charAt(0);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('hirotix_user');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

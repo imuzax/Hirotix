@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Dashboard - Hirotix</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Ionicons for modern icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="js/theme.js"></script>
+</head>
+
+<body class="dashboard-body">
+    <!-- Abstract Background for Glass Effect -->
+    <div class="bg-shape shape-1" style="width: 40vw; height: 40vw; top: -10%; left: -10%;"></div>
+    <div class="bg-shape shape-2" style="width: 50vw; height: 50vw; bottom: -10%; right: -10%;"></div>
+    <div class="bg-shape shape-3"
+        style="background:rgba(224, 195, 252, 0.5); top:20%; left:30%; width: 30vw; height: 30vw;"></div>
+    <div class="bg-shape shape-1"
+        style="background:rgba(142, 197, 252, 0.4); bottom:20%; left:10%; width: 25vw; height: 25vw; animation-delay: -3s;">
+    </div>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass">
+            <div class="sidebar-logo">
+                <a href="index.html" class="logo-brand">
+                    <div class="brand-icon" style="width: 38px; height: 38px;"></div>
+                    <span class="brand-text" style="font-size: 1.6rem;">Hirotix<span class="brand-dot">.</span></span>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item-btn active" data-target="overviewView">
+                    <ion-icon name="grid-outline" class="nav-icon"></ion-icon>
+                    Overview
+                </button>
+                <button class="nav-item-btn" data-target="postJobView">
+                    <ion-icon name="add-circle-outline" class="nav-icon"></ion-icon>
+                    Post a Job
+                </button>
+                <button class="nav-item-btn" data-target="myJobsView">
+                    <ion-icon name="briefcase-outline" class="nav-icon"></ion-icon>
+                    My Jobs
+                </button>
+                <button class="nav-item-btn" data-target="candidatesView">
+                    <ion-icon name="people-outline" class="nav-icon"></ion-icon>
+                    Candidates
+                </button>
+                <button class="nav-item-btn" onclick="window.location.href='mock-interview.html'">
+                    <ion-icon name="hardware-chip-outline" class="nav-icon"></ion-icon>
+                    <span
+                        style="background: linear-gradient(90deg, #A8EDEA 0%, #FED6E3 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;">AI
+                        Mock Interview</span>
+                </button>
+            </nav>
+
+            <div class="user-profile-mini">
+                <div class="user-avatar" id="sidebarInitial">R</div>
+                <div class="user-info-mini">
+                    <h4 id="sidebarName">Loading...</h4>
+                    <p id="sidebarEmail">--</p>
+                </div>
+            </div>
+            <button class="nav-item-btn theme-switcher" id="themeToggle" onclick="toggleTheme()"
+                style="margin-top: auto;">
+                <ion-icon name="moon-outline" class="nav-icon"></ion-icon>
+                Dark Mode
+            </button>
+            <button class="logout-btn" onclick="logout()">
+                <ion-icon name="log-out-outline"></ion-icon> Logout
+            </button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content glass">
+
+            <!-- OVERVIEW VIEW -->
+            <section id="overviewView" class="dashboard-view active">
+                <div class="view-header">
+                    <h2>Recruiter Overview</h2>
+                    <p>Welcome back! Here's your recruitment pipeline at a glance.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card stat-card">
+                        <div class="stat-value" id="statActiveJobs">0</div>
+                        <div class="stat-label">Active Jobs</div>
+                    </div>
+                    <div class="card stat-card"
+                        style="background: linear-gradient(135deg, rgba(224, 195, 252, 0.4) 0%, rgba(142, 197, 252, 0.4) 100%);">
+                        <div class="stat-value" id="statTotalApplicants">0</div>
+                        <div class="stat-label">Total Applicants</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value" id="statShortlisted">0</div>
+                        <div class="stat-label">Shortlisted</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 30px;">
+                    <div class="card-title">
+                        <ion-icon name="sparkles" style="color: var(--accent-color);"></ion-icon>
+                        Recent Top AI Matches
+                    </div>
+                    <p style="color: var(--secondary-text); margin-bottom: 20px;">Highest scoring candidates for your
+                        open roles</p>
+
+                    <div class="grid-2" id="topCandidatesContainer">
+                        <!-- Filled by JS -->
+                        <p>No candidates have applied yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- POST JOB VIEW -->
+            <section id="postJobView" class="dashboard-view">
+                <div class="view-header">
+                    <h2>Post a New Job</h2>
+                </div>
+
+                <div class="card">
+                    <form id="postJobForm" class="auth-form">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                <input type="text" id="jobTitle" class="form-control" required
+                                    placeholder="e.g. Senior Frontend Engineer">
+                            </div>
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                <input type="text" id="jobCompany" class="form-control" required
+                                    placeholder="e.g. Acme Corp">
+                            </div>
+                            <div class="form-group">
+                                <label>Location</label>
+                                <input type="text" id="jobLocation" class="form-control" required
+                                    placeholder="e.g. Remote, or New York, NY">
+                            </div>
+                            <div class="form-group">
+                                <label>Salary (Optional)</label>
+                                <input type="text" id="jobSalary" class="form-control" placeholder="e.g. $100k - $120k">
+                            </div>
+                            <div class="form-group">
+                                <label>Job Type</label>
+                                <select id="jobType" class="form-control" required
+                                    style="appearance: auto; background: rgba(255,255,255,0.7);">
+                                    <option value="FULL_TIME">Full Time</option>
+                                    <option value="PART_TIME">Part Time</option>
+                                    <option value="CONTRACT">Contract</option>
+                                    <option value="INTERNSHIP">Internship</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Experience Level</label>
+                                <select id="jobExperienceLevel" class="form-control" required
+                                    style="appearance: auto; background: rgba(255,255,255,0.7);">
+                                    <option value="JUNIOR">Junior (0-2 years)</option>
+                                    <option value="MID">Mid-Level (3-5 years)</option>
+                                    <option value="SENIOR">Senior (5+ years)</option>
+                                    <option value="EXECUTIVE">Executive / Lead</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label>Job Description & Requirements</label>
+                            <textarea id="jobDescription" class="form-control" required rows="6"
+                                placeholder="Describe the role, responsibilities, and required skills..."></textarea>
+                        </div>
+
+                        <div id="jobMsg" class="form-message" style="margin-top: 15px;"></div>
+                        <button type="submit" class="btn btn-primary btn-large mt-3" id="postJobBtn">Publish Job
+                            Posting</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- MY JOBS VIEW -->
+            <section id="myJobsView" class="dashboard-view">
+                <div class="view-header">
+                    <h2>Manage Job Postings</h2>
+                </div>
+
+                <div class="grid-2" id="myJobsContainer">
+                    <!-- Rendered via JS -->
+                    <p>Loading your jobs...</p>
+                </div>
+            </section>
+
+            <!-- CANDIDATES VIEW -->
+            <section id="candidatesView" class="dashboard-view">
+                <div class="view-header">
+                    <h2>Applicant Tracker</h2>
+                    <div style="display: flex; gap: 10px; width: 300px;">
+                        <select id="filterJobSelect" class="form-control"
+                            style="appearance: auto; background: rgba(255,255,255,0.7);">
+                            <option value="">Filter by Job...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead style="background: rgba(0,0,0,0.03); border-bottom: 1px solid var(--glass-border);">
+                            <tr>
+                                <th style="padding: 16px;">Candidate Name</th>
+                                <th style="padding: 16px;">Applied For</th>
+                                <th style="padding: 16px;">AI Match Score <ion-icon name="sparkles"
+                                        style="color:var(--accent-color)"></ion-icon></th>
+                                <th style="padding: 16px;">Status</th>
+                                <th style="padding: 16px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidatesTableBody">
+                            <!-- Rendered via JS -->
+                            <tr>
+                                <td colspan="5" style="padding: 16px; text-align: center;">No applicants found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Check Authentication
+        const user = getCurrentUser();
+        if (!user || user.role !== 'RECRUITER') {
+            window.location.href = 'login.html';
+        }
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('sidebarName').textContent = user.fullName;
+            document.getElementById('sidebarEmail').textContent = user.email;
+            document.getElementById('sidebarInitial').textContent = user.fullName.charAt(0).toUpperCase();
+
+            // Setup Navigation Tabs
+            const navBtns = document.querySelectorAll('.nav-item-btn');
+            const views = document.querySelectorAll('.dashboard-view');
+
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active from all
+                    navBtns.forEach(b => b.classList.remove('active'));
+                    views.forEach(v => v.classList.remove('active'));
+
+                    // Add active to clicked
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+
+                    // Trigger data fetch based on view
+                    if (targetId === 'myJobsView') loadMyJobs();
+                    if (targetId === 'candidatesView') loadCandidates();
+                    if (targetId === 'overviewView') loadOverview();
+                });
+            });
+
+            // Handle Job Post Submit
+            document.getElementById('postJobForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('postJobBtn');
+                const msg = document.getElementById('jobMsg');
+
+                try {
+                    btn.disabled = true;
+                    btn.textContent = 'Publishing...';
+
+                    const jobData = {
+                        title: document.getElementById('jobTitle').value,
+                        company: document.getElementById('jobCompany').value,
+                        location: document.getElementById('jobLocation').value,
+                        salary: document.getElementById('jobSalary').value,
+                        jobType: document.getElementById('jobType').value,
+                        experienceLevel: document.getElementById('jobExperienceLevel').value,
+                        description: document.getElementById('jobDescription').value
+                    };
+
+                    await createJob(user.id, jobData);
+
+                    msg.textContent = 'Job posted successfully!';
+                    msg.className = 'form-message success';
+                    document.getElementById('postJobForm').reset();
+
+                    setTimeout(() => {
+                        msg.className = 'form-message';
+                        // trigger my jobs view
+                        document.querySelector('[data-target="myJobsView"]').click();
+                    }, 2000);
+
+                } catch (error) {
+                    msg.textContent = error.message || 'Failed to post job.';
+                    msg.className = 'form-message error';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Publish Job Posting';
+                }
+            });
+
+            // Initial Load
+            loadOverview();
+        });
+
+        // API Logic
+        async function loadOverview() {
+            try {
+                const myJobs = await getJobsByRecruiter(user.id);
+                document.getElementById('statActiveJobs').textContent = myJobs.length;
+
+                // For applicants count, we'll need to fetch applications for all my jobs
+                // Since there is no single endpoint for this yet, we'll aggregate them
+                let totalApplicants = 0;
+                let shortlisted = 0;
+                const topCandidates = [];
+
+                for (const job of myJobs) {
+                    const apps = await getApplicationsForJob(job.id);
+                    totalApplicants += apps.length;
+
+                    apps.forEach(app => {
+                        if (app.status === 'SHORTLISTED') shortlisted++;
+                        // If AI score is high, add to top candidates
+                        if (app.matchScore > 80) {
+                            topCandidates.push(app);
+                        }
+                    });
+                }
+
+                document.getElementById('statTotalApplicants').textContent = totalApplicants;
+                document.getElementById('statShortlisted').textContent = shortlisted;
+
+                // Render Top AI Matches inline
+                const tcContainer = document.getElementById('topCandidatesContainer');
+                if (topCandidates.length > 0) {
+                    tcContainer.innerHTML = '';
+                    topCandidates.sort((a, b) => b.matchScore - a.matchScore).slice(0, 4).forEach(app => {
+                        tcContainer.innerHTML += `
+                            <div class="card" style="background: rgba(255,255,255,0.4);">
+                                <div style="display:flex; justify-content:space-between;">
+                                    <h4 style="margin-bottom: 5px;">${app.seeker.fullName}</h4>
+                                    <span style="color:var(--accent-color); font-weight:bold;">${app.matchScore.toFixed(0)}%</span>
+                                </div>
+                                <p style="font-size: 0.9rem; color: #555;">Applied for: ${app.job.title}</p>
+                                <button class="btn btn-outline btn-small mt-3" style="width:100%" onclick="document.querySelector('[data-target=&quot;candidatesView&quot;]').click()">Review Candidate</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    tcContainer.innerHTML = '<p>No highly matched candidates yet.</p>';
+                }
+
+            } catch (e) { console.error('Error loading overview', e); }
+        }
+
+        async function loadMyJobs() {
+            const container = document.getElementById('myJobsContainer');
+            container.innerHTML = '<p>Loading your jobs...</p>';
+            try {
+                const jobs = await getJobsByRecruiter(user.id);
+                if (!jobs || jobs.length === 0) {
+                    container.innerHTML = "<p>You haven't posted any jobs yet.</p>";
+                    return;
+                }
+
+                container.innerHTML = '';
+                jobs.forEach(job => {
+                    container.innerHTML += `
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h3 style="margin-bottom: 5px; color: #1d1d1f;">${job.title}</h3>
+                                    <span class="hero-pill glass" style="font-size: 0.75rem; padding: 4px 10px;">${job.jobType}</span>
+                                </div>
+                            </div>
+                            <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                <span style="font-size: 0.85rem; color: #666;"><ion-icon name="location-outline"></ion-icon> ${job.location}</span>
+                            </div>
+                            <p style="margin-top: 15px; font-size: 0.9rem; color: #555; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                ${job.description}
+                            </p>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                container.innerHTML = '<p>Error loading jobs.</p>';
+            }
+        }
+
+        async function loadCandidates() {
+            const tbody = document.getElementById('candidatesTableBody');
+            const jobSelect = document.getElementById('filterJobSelect');
+
+            tbody.innerHTML = '<tr><td colspan="5" style="padding: 16px; text-align: center;">Loading candidates...</td></tr>';
+
+            try {
+                const myJobs = await getJobsByRecruiter(user.id);
+
+                // Populate filter dropdown if empty
+                if (jobSelect.options.length <= 1) {
+                    myJobs.forEach(job => {
+                        const option = document.createElement('option');
+                        option.value = job.id;
+                        option.textContent = job.title;
+                        jobSelect.appendChild(option);
+                    });
+                }
+
+                let allApps = [];
+                for (const job of myJobs) {
+                    const apps = await getApplicationsForJob(job.id);
+                    allApps = allApps.concat(apps);
+                }
+
+                // Filter logic
+                const selectedJobId = jobSelect.value;
+                if (selectedJobId) {
+                    allApps = allApps.filter(a => a.job.id == selectedJobId);
+                }
+
+                // Sort by Match Score Descending
+                allApps.sort((a, b) => b.matchScore - a.matchScore);
+
+                if (!allApps || allApps.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="padding: 16px; text-align: center;">No applicants found.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                allApps.forEach(app => {
+                    let statusColor = app.status === 'PENDING' ? '#f39c12' : (app.status === 'SHORTLISTED' ? '#2ecc71' : '#e74c3c');
+
+                    tbody.innerHTML += `
+                        <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                            <td style="padding: 16px; font-weight: 500;">
+                                ${app.seeker.fullName}
+                                <div style="font-size:0.8rem; color:#888; font-weight:normal;">${app.seeker.email}</div>
+                            </td>
+                            <td style="padding: 16px; color: #555;">${app.job.title}</td>
+                            <td style="padding: 16px; font-weight: bold; color: ${app.matchScore && app.matchScore >= 80 ? 'var(--accent-color)' : '#555'};">
+                                ${app.matchScore ? app.matchScore.toFixed(0) : '0'}%
+                            </td>
+                            <td style="padding: 16px;">
+                                <span style="background: ${statusColor}22; color: ${statusColor}; padding: 4px 12px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
+                                    ${app.status}
+                                </span>
+                            </td>
+                            <td style="padding: 16px;">
+                                <select class="form-control" style="padding: 4px; font-size:0.8rem;" onchange="updateApplicationStatus(${app.id}, this)">
+                                    <option value="PENDING" ${app.status === 'PENDING' ? 'selected' : ''}>Pending</option>
+                                    <option value="SHORTLISTED" ${app.status === 'SHORTLISTED' ? 'selected' : ''}>Shortlist</option>
+                                    <option value="REJECTED" ${app.status === 'REJECTED' ? 'selected' : ''}>Reject</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="5" style="padding: 16px; text-align: center;">Error loading candidates.</td></tr>';
+            }
+        }
+
+        document.getElementById('filterJobSelect').addEventListener('change', loadCandidates);
+
+        async function updateApplicationStatus(appId, selectElement) {
+            const newStatus = selectElement.value;
+            // Since we don't have a dedicated updateStatus endpoint in api.js yet, 
+            // We bypass through a direct fetch call to the backend PUT endpoint.
+            try {
+                selectElement.disabled = true;
+                await fetch(`${BASE_URL}/applications/${appId}/status?status=${newStatus}`, {
+                    method: 'PUT'
+                });
+                // Reload correctly
+                loadCandidates();
+                loadOverview(); // update stats
+            } catch (e) {
+                alert('Detailed Update failed');
+                selectElement.disabled = false;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('hirotix_user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>
