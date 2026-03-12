@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Hirotix</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <script src="js/theme.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <!-- Abstract Background for Glass Effect -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3" style="background:#e0c3fc; top:auto; bottom:20%; left:-10%;"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass" style="top: 20px;">
+        <a href="index.html" class="logo-brand">
+            <div class="brand-icon" style="width: 36px; height: 36px;"></div>
+            <span class="brand-text" style="font-size: 1.6rem;">Hirotix<span class="brand-dot">.</span></span>
+        </a>
+        <div class="nav-buttons">
+            <a href="login.html" class="btn btn-outline"
+                style="padding: 8px 20px; border-radius: 99px; border: 1px solid #1d1d1f; color: #1d1d1f; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: background 0.3s; display: inline-block;">Log
+                In</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="auth-container">
+        <div class="auth-card glass">
+            <div class="auth-header">
+                <h2>Create an account</h2>
+                <p>Join Hirotix to find or post jobs</p>
+            </div>
+
+            <!-- Auth Tabs (Seeker vs Recruiter) -->
+            <div class="auth-tabs" id="roleTabs">
+                <button type="button" class="tab-btn active" data-role="SEEKER">Job Seeker</button>
+                <button type="button" class="tab-btn" data-role="RECRUITER">Recruiter</button>
+            </div>
+
+            <form id="registerForm" class="auth-form">
+                <input type="hidden" id="role" value="SEEKER">
+                <div id="registerMessage" class="form-message"></div>
+
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" required placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required placeholder="you@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" required
+                        placeholder="Create a strong password">
+                </div>
+
+                <button type="submit" class="btn btn-large btn-primary w-100" id="registerBtn">
+                    <span>Create Account</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign in</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Handle Role Tabs
+        const tabs = document.querySelectorAll('.tab-btn');
+        const roleInput = document.getElementById('role');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                roleInput.value = tab.getAttribute('data-role');
+            });
+        });
+
+        // Form Submit
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                role: roleInput.value
+            };
+
+            const msgDiv = document.getElementById('registerMessage');
+            const btn = document.getElementById('registerBtn');
+
+            try {
+                // Disable button and show loading state
+                btn.disabled = true;
+                btn.innerHTML = '<span>Creating account...</span>';
+                msgDiv.className = 'form-message';
+
+                const response = await register(payload);
+
+                msgDiv.textContent = 'Registration successful! Redirecting to login...';
+                msgDiv.className = 'form-message success';
+
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            } catch (error) {
+                msgDiv.textContent = error.message || 'Registration failed. Email might already be in use.';
+                msgDiv.className = 'form-message error';
+                btn.disabled = false;
+                btn.innerHTML = '<span>Create Account</span>';
+            }
+        });
+
+        // Add a simple redirect if already logged in (for convenience)
+        window.addEventListener('DOMContentLoaded', () => {
+            const user = getCurrentUser();
+            if (user) {
+                if (user.role === 'SEEKER') window.location.href = 'seeker-dashboard.html';
+                else if (user.role === 'RECRUITER') window.location.href = 'recruiter-dashboard.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

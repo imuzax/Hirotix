@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Hirotix</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Ionicons for modern icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="js/theme.js"></script>
+</head>
+
+<body class="dashboard-body">
+    <!-- Abstract Background for Glass Effect -->
+    <div class="bg-shape shape-1" style="width: 40vw; height: 40vw; top: -10%; left: -10%;"></div>
+    <div class="bg-shape shape-2" style="width: 50vw; height: 50vw; bottom: -10%; right: -10%;"></div>
+    <div class="bg-shape shape-3"
+        style="background:rgba(224, 195, 252, 0.5); top:20%; left:30%; width: 30vw; height: 30vw;"></div>
+    <div class="bg-shape shape-1"
+        style="background:rgba(142, 197, 252, 0.4); bottom:20%; left:10%; width: 25vw; height: 25vw; animation-delay: -3s;">
+    </div>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass">
+            <div class="sidebar-logo">
+                <a href="index.html" class="logo-brand">
+                    <div class="brand-icon" style="width: 38px; height: 38px;"></div>
+                    <span class="brand-text" style="font-size: 1.6rem;">Hirotix<span class="brand-dot">.</span></span>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item-btn active" data-target="overviewView">
+                    <ion-icon name="grid-outline" class="nav-icon"></ion-icon>
+                    Overview
+                </button>
+                <button class="nav-item-btn" data-target="jobsView">
+                    <ion-icon name="briefcase-outline" class="nav-icon"></ion-icon>
+                    Find Jobs
+                </button>
+                <button class="nav-item-btn" data-target="applicationsView">
+                    <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
+                    My Applications
+                </button>
+                <button class="nav-item-btn" onclick="window.location.href='resume-builder.html'">
+                    <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
+                    Resume Builder
+                </button>
+                <button class="nav-item-btn" data-target="profileView">
+                    <ion-icon name="person-outline" class="nav-icon"></ion-icon>
+                    My Profile
+                </button>
+                <button class="nav-item-btn" onclick="window.location.href='mock-interview.html'">
+                    <ion-icon name="hardware-chip-outline" class="nav-icon"></ion-icon>
+                    <span
+                        style="background: linear-gradient(90deg, #A8EDEA 0%, #FED6E3 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;">AI
+                        Mock Interview</span>
+                </button>
+            </nav>
+
+            <div class="user-profile-mini">
+                <div class="user-avatar" id="sidebarInitial">M</div>
+                <div class="user-info-mini">
+                    <h4 id="sidebarName">Loading...</h4>
+                    <p id="sidebarEmail">--</p>
+                </div>
+            </div>
+            <button class="nav-item-btn theme-switcher" id="themeToggle" onclick="toggleTheme()"
+                style="margin-top: auto;">
+                <ion-icon name="moon-outline" class="nav-icon"></ion-icon>
+                Dark Mode
+            </button>
+            <button class="logout-btn" onclick="logout()">
+                <ion-icon name="log-out-outline"></ion-icon> Logout
+            </button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content glass">
+
+            <!-- OVERVIEW VIEW -->
+            <section id="overviewView" class="dashboard-view active">
+                <div class="view-header">
+                    <h2>Dashboard Overview</h2>
+                    <p>Welcome back! Here's what's happening today.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card stat-card">
+                        <div class="stat-value" id="statApplications">0</div>
+                        <div class="stat-label">Applications Sent</div>
+                    </div>
+                    <div class="card stat-card"
+                        style="background: linear-gradient(135deg, rgba(224, 195, 252, 0.4) 0%, rgba(142, 197, 252, 0.4) 100%);">
+                        <div class="stat-value" id="statInterviews">0</div>
+                        <div class="stat-label">Interview Invites</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value" id="statMatches">24</div>
+                        <div class="stat-label">AI Job Matches</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 30px;">
+                    <div class="card-title">
+                        <ion-icon name="sparkles" style="color: var(--accent-color);"></ion-icon>
+                        Top AI Recommendations
+                    </div>
+                    <p style="color: var(--secondary-text); margin-bottom: 20px;">Based on your resume analysis</p>
+
+                    <div class="grid-2" id="recommendedJobsContainer">
+                        <!-- Filled by JS -->
+                        <p>Upload a resume to get AI recommendations!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROFILE & RESUME VIEW -->
+            <section id="profileView" class="dashboard-view">
+                <div class="view-header">
+                    <h2>My Profile</h2>
+                    <button class="btn btn-primary btn-small" id="saveProfileBtn">Save Changes</button>
+                </div>
+
+                <div class="grid-2">
+                    <!-- Basic Info -->
+                    <div class="card">
+                        <div class="card-title">Personal Details</div>
+                        <form id="profileForm" class="auth-form">
+                            <div class="form-group">
+                                <label>Headline</label>
+                                <input type="text" id="profileHeadline" class="form-control"
+                                    placeholder="e.g. Full Stack Developer">
+                            </div>
+                            <div class="form-group">
+                                <label>Location</label>
+                                <input type="text" id="profileLocation" class="form-control"
+                                    placeholder="e.g. Pune, India">
+                            </div>
+                            <div class="form-group">
+                                <label>GitHub Link</label>
+                                <input type="url" id="profileGithub" class="form-control"
+                                    placeholder="https://github.com/...">
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- AI Resume Upload -->
+                    <div class="card">
+                        <div class="card-title">
+                            <ion-icon name="document-attach-outline"></ion-icon>
+                            Resume AI Parsing
+                        </div>
+                        <p style="font-size: 0.9rem; margin-bottom: 15px; color: var(--secondary-text);">
+                            Upload your resume (PDF/TXT) to instantly extract your skills using our NLP model.
+                        </p>
+
+                        <form id="resumeUploadForm" class="file-upload-wrapper">
+                            <ion-icon name="cloud-upload-outline" class="file-upload-icon"></ion-icon>
+                            <h4>Drag & drop your resume here</h4>
+                            <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">or click to browse files</p>
+                            <input type="file" id="resumeFile" accept=".pdf,.txt" required>
+
+                            <div id="uploadStatus" style="margin-top: 15px; font-weight: 500;"></div>
+                            <button type="submit" class="btn btn-primary btn-small upload-btn mt-3" id="uploadBtn">Parse
+                                with AI</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Extracted Skills -->
+                <div class="card">
+                    <div class="card-title">Extracted Skills (AI)</div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <textarea id="profileSkills" class="form-control" rows="3"
+                            placeholder="Skills will appear here after parsing..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FIND JOBS VIEW -->
+            <section id="jobsView" class="dashboard-view">
+                <div class="view-header">
+                    <h2>Explore Opportunities</h2>
+                    <div class="search-bar" style="display: flex; gap: 10px; width: 50%;">
+                        <input type="text" id="jobSearchInput" class="form-control"
+                            placeholder="Search by role, company...">
+                        <button class="btn btn-primary" onclick="searchJobs()">Search</button>
+                    </div>
+                </div>
+
+                <div class="grid-2" id="allJobsContainer">
+                    <!-- Rendered via JS -->
+                    <p>Loading jobs...</p>
+                </div>
+            </section>
+
+            <!-- APPLICATIONS VIEW -->
+            <section id="applicationsView" class="dashboard-view">
+                <div class="view-header">
+                    <h2>My Applications</h2>
+                </div>
+
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead style="background: rgba(0,0,0,0.03); border-bottom: 1px solid var(--glass-border);">
+                            <tr>
+                                <th style="padding: 16px;">Job Title</th>
+                                <th style="padding: 16px;">Company</th>
+                                <th style="padding: 16px;">Applied Date</th>
+                                <th style="padding: 16px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicationsTableBody">
+                            <!-- Rendered via JS -->
+                            <tr>
+                                <td colspan="4" style="padding: 16px; text-align: center;">No applications found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Check Authentication
+        const user = getCurrentUser();
+        if (!user || user.role !== 'SEEKER') {
+            window.location.href = 'login.html';
+        }
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('sidebarName').textContent = user.fullName;
+            document.getElementById('sidebarEmail').textContent = user.email;
+            document.getElementById('sidebarInitial').textContent = user.fullName.charAt(0).toUpperCase();
+
+            // Setup Navigation Tabs
+            const navBtns = document.querySelectorAll('.nav-item-btn');
+            const views = document.querySelectorAll('.dashboard-view');
+
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active from all
+                    navBtns.forEach(b => b.classList.remove('active'));
+                    views.forEach(v => v.classList.remove('active'));
+
+                    // Add active to clicked
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+
+                    // Trigger data fetch based on view
+                    if (targetId === 'jobsView') loadAllJobs();
+                    if (targetId === 'applicationsView') loadMyApplications();
+                    if (targetId === 'profileView') loadProfile();
+                    if (targetId === 'overviewView') loadOverview();
+                });
+            });
+
+            // Initial Load
+            loadOverview();
+        });
+
+        // API Logic
+        async function loadProfile() {
+            try {
+                const profile = await getProfile(user.id);
+                if (profile) {
+                    document.getElementById('profileHeadline').value = profile.headline || '';
+                    document.getElementById('profileLocation').value = profile.location || '';
+                    document.getElementById('profileGithub').value = profile.githubLink || '';
+                    document.getElementById('profileSkills').value = profile.extractedSkills || '';
+                }
+            } catch (e) { console.error('Error loading profile', e); }
+        }
+
+        async function loadOverview() {
+            try {
+                const apps = await getMyApplications(user.id);
+                document.getElementById('statApplications').textContent = apps.length;
+
+                // Load AI Recommendations
+                const recommendations = await getAIJobRecommendations(user.id);
+                const container = document.getElementById('recommendedJobsContainer');
+
+                if (recommendations && recommendations.length > 0) {
+                    container.innerHTML = '';
+                    recommendations.slice(0, 4).forEach(item => {
+                        const job = item.job;
+                        container.innerHTML += `
+                            <div class="card" style="background: rgba(255,255,255,0.7); border: 1px solid var(--accent-color); box-shadow: 0 8px 32px rgba(0,113,227,0.1);">
+                                <div style="display:flex; justify-content:space-between; align-items: flex-start; margin-bottom: 12px;">
+                                    <div>
+                                        <h4 style="margin: 0; font-size: 1.1rem;">${job.title}</h4>
+                                        <p style="font-size: 0.85rem; color: var(--secondary-text); margin-top: 4px;">${job.company} • ${job.location}</p>
+                                    </div>
+                                    <span class="match-score">${(item.score * 100).toFixed(0)}% Match</span>
+                                </div>
+                                <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                                    <button class="btn btn-accent btn-small" style="flex: 1;" onclick="applyToJob(${job.id})">Fast Apply</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<p>No AI recommendations yet. Make sure to upload your resume!</p>';
+                }
+
+                document.getElementById('statMatches').textContent = recommendations ? recommendations.length : 0;
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadAllJobs() {
+            const container = document.getElementById('allJobsContainer');
+            container.innerHTML = '<p>Loading jobs...</p>';
+            try {
+                const jobs = await getAllActiveJobs();
+                renderJobs(jobs, container);
+            } catch (e) {
+                container.innerHTML = '<p>Error loading jobs.</p>';
+            }
+        }
+
+        async function searchJobs() {
+            const query = document.getElementById('jobSearchInput').value;
+            const container = document.getElementById('allJobsContainer');
+            container.innerHTML = '<p>Searching...</p>';
+            try {
+                const jobs = await searchJobsAPI(query, '');
+                renderJobs(jobs, container);
+            } catch (e) {
+                container.innerHTML = '<p>Error searching jobs.</p>';
+            }
+        }
+
+        function renderJobs(jobs, container) {
+            if (!jobs || jobs.length === 0) {
+                container.innerHTML = '<p>No jobs found.</p>';
+                return;
+            }
+            container.innerHTML = '';
+            jobs.forEach(job => {
+                container.innerHTML += `
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h3 style="margin-bottom: 5px; color: #1d1d1f;">${job.title}</h3>
+                                <p style="color: var(--accent-color); font-weight: 500; font-size: 0.9rem;">${job.company}</p>
+                            </div>
+                            <span class="hero-pill glass" style="font-size: 0.75rem; padding: 4px 10px;">${job.jobType}</span>
+                        </div>
+                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <span style="font-size: 0.85rem; color: #666;"><ion-icon name="location-outline"></ion-icon> ${job.location}</span>
+                            <span style="font-size: 0.85rem; color: #666;"><ion-icon name="cash-outline"></ion-icon> ${job.salary || 'Not specified'}</span>
+                        </div>
+                        <p style="margin-top: 15px; font-size: 0.9rem; color: #555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            ${job.description}
+                        </p>
+                        <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.05); margin: 15px 0;">
+                        <button class="btn btn-primary w-100" onclick="applyToJob(${job.id})">Apply Now</button>
+                    </div>
+                `;
+            });
+        }
+
+        async function applyToJob(jobId) {
+            try {
+                await applyForJob(jobId, user.id);
+                alert("Successfully applied for the job!");
+                loadMyApplications();
+            } catch (e) {
+                alert("Failed to apply. You might have already applied.");
+            }
+        }
+
+        async function loadMyApplications() {
+            const tbody = document.getElementById('applicationsTableBody');
+            tbody.innerHTML = '<tr><td colspan="4" style="padding: 16px; text-align: center;">Loading...</td></tr>';
+            try {
+                const apps = await getMyApplications(user.id);
+                if (!apps || apps.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 16px; text-align: center;">No applications found.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                apps.forEach(app => {
+                    let statusColor = app.status === 'PENDING' ? '#f39c12' : (app.status === 'SHORTLISTED' ? '#2ecc71' : '#e74c3c');
+                    tbody.innerHTML += `
+                        <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                            <td style="padding: 16px; font-weight: 500;">${app.job.title}</td>
+                            <td style="padding: 16px; color: #555;">${app.job.company}</td>
+                            <td style="padding: 16px; color: #888; font-size: 0.9rem;">${app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'Recently'}</td>
+                            <td style="padding: 16px;">
+                                <span style="background: ${statusColor}22; color: ${statusColor}; padding: 4px 12px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
+                                    ${app.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="4" style="padding: 16px; text-align: center;">Error loading applications.</td></tr>';
+            }
+        }
+
+        // Handle Profile Saving (Using basic fetch here for full update since api.js doesn't have saveProfile yet)
+        document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('saveProfileBtn');
+            btn.textContent = 'Saving...';
+            try {
+                const payload = {
+                    headline: document.getElementById('profileHeadline').value,
+                    location: document.getElementById('profileLocation').value,
+                    githubLink: document.getElementById('profileGithub').value,
+                    user: { id: user.id }
+                };
+
+                await fetch(`${BASE_URL}/profiles/${user.id}`, {
+                    method: 'PUT',
+                    headers: getHeaders(),
+                    body: JSON.stringify(payload)
+                });
+
+                btn.textContent = 'Saved!';
+                setTimeout(() => btn.textContent = 'Save Changes', 2000);
+            } catch (e) {
+                alert("Failed to save profile");
+                btn.textContent = 'Save Changes';
+            }
+        });
+
+        // Handle Resume Upload & parsing
+        document.getElementById('resumeUploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('resumeFile').files[0];
+            if (!file) return;
+
+            const btn = document.getElementById('uploadBtn');
+            const status = document.getElementById('uploadStatus');
+
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Uploading...';
+                status.textContent = 'Uploading resume to server...';
+
+                await uploadResume(user.id, file);
+
+                status.textContent = 'Parsing with AI Engine (This might take a moment)...';
+                btn.textContent = 'Processing AI...';
+
+                // Call the python endpoint indirectly via spring boot (if configured) or directly
+                await parseResumeAI(user.id);
+
+                status.textContent = 'Parsed successfully!';
+                status.style.color = 'green';
+
+                // Reload profile to show extracted skills
+                await loadProfile();
+
+            } catch (error) {
+                status.textContent = 'Error: Make sure Python AI Service is running.';
+                status.style.color = 'red';
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Parse with AI';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('hirotix_user');
+            window.location.href = 'index.html';
+        }
+
+        // Display file name on upload
+        document.getElementById('resumeFile').addEventListener('change', function (e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : '';
+            document.getElementById('uploadStatus').textContent = fileName ? 'Selected: ' + fileName : '';
+        });
+    </script>
+</body>
+
+</html>
