@@ -28,4 +28,6 @@ public class Application {
     private String status; // APPLIED, SHORTLISTED, REJECTED
 
     private LocalDateTime appliedDate;
+
+    private Double matchScore;
 }
