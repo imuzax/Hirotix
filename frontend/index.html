@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hirotix - AI Job Portal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/theme.js"></script>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <!-- Glassmorphism Loader -->
+    <div class="loader-wrapper" id="pageLoader">
+        <!-- Loader Background Particles -->
+        <div class="loader-particle particle-1"></div>
+        <div class="loader-particle particle-2"></div>
+        <div class="loader-particle particle-3"></div>
+
+        <div class="loader-content">
+            <div class="loader-brand-container">
+                <span class="loader-rest">Hirotix<span style="color:var(--accent-color)">.</span></span>
+            </div>
+
+            <div class="loader-progress-container">
+                <div class="loader-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Abstract Background for Glass Effect -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3" style="background:#e0c3fc; top:auto; bottom:20%; left:-10%;"></div>
+
+    <!-- Announcement Bar -->
+    <div class="announcement-bar" id="announcementBar">
+        <p>🚀 AI-powered hiring platform – Find the right job faster with Hirotix</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass" id="mainNavbar">
+        <a href="#home" class="logo-brand">
+            <span class="brand-text">Hirotix<span class="brand-dot">.</span></span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home" class="nav-item">Home</a></li>
+            <li><a href="#features" class="nav-item">Features</a></li>
+            <li><a href="#how-it-works" class="nav-item">How It Works</a></li>
+            <li><a href="#team" class="nav-item">Team</a></li>
+            <li><a href="#contact" class="nav-item">Contact</a></li>
+        </ul>
+
+        <div class="nav-buttons">
+            <a href="login.html" class="nav-item" style="margin-right: 15px;">Login</a>
+            <a href="register.html" class="btn btn-accent">Get Started</a>
+            <button class="mobile-menu-toggle" id="menuToggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <header class="hero fade-in-section" id="home">
+            <div class="hero-particles" id="heroParticles"></div>
+            <div class="hero-blur-shapes">
+                <div class="blur-shape shape-1"></div>
+                <div class="blur-shape shape-2"></div>
+            </div>
+
+            <div class="hero-content">
+                <div class="hero-pill">✨ The future of hiring is here</div>
+                <h1>AI-Powered Recruitment for the Future Workforce</h1>
+                <p>Hirotix uses intelligent algorithms to connect talented professionals with the right opportunities
+                    faster and
+                    smarter.</p>
+                <div class="hero-buttons">
+                    <a href="register.html" class="btn btn-accent btn-large">Get Started Free</a>
+                    <a href="#how-it-works" class="btn btn-outline btn-large">Explore Platform</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mission Section -->
+        <section class="mission-section fade-in-section" id="features">
+            <div class="mission-container">
+                <div class="mission-text">
+                    <div class="section-tag">Our Mission</div>
+                    <h2>Redefining Career Opportunities with Artificial Intelligence</h2>
+                    <p>Hirotix is designed to bridge the gap between talent and opportunity by using intelligent
+                        data-driven
+                        recruitment technology. We believe in a world where everyone has access to the best career paths
+                        tailored to their unique potential.</p>
+                    <ul class="mission-features">
+                        <li><ion-icon name="checkmark-circle-outline"></ion-icon> Precision AI Matching</li>
+                        <li><ion-icon name="analytics-outline"></ion-icon> Real-time Skill Gap Analysis</li>
+                        <li><ion-icon name="flash-outline"></ion-icon> Accelerated Hiring Workflow</li>
+                    </ul>
+                </div>
+                <div class="mission-graphic">
+                    <div class="ai-visual">
+                        <div class="ai-node node-1"><ion-icon name="person-outline"></ion-icon></div>
+                        <div class="ai-node node-2"><ion-icon name="briefcase-outline"></ion-icon></div>
+                        <div class="ai-node node-central"><ion-icon name="diamond-outline"></ion-icon></div>
+                        <div class="ai-connection conn-1"></div>
+                        <div class="ai-connection conn-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="section fade-in-section">
+            <div class="section-header">
+                <div class="section-tag">The Process</div>
+                <h2>A Seamless Journey to Your Next Career</h2>
+                <p style="color: var(--secondary-text)">Four simple steps to find your dream role using Hirotix.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-step">
+                    <div class="step-icon">1</div>
+                    <div class="step-content">
+                        <h3>Upload Your Resume</h3>
+                        <p>Upload your resume and let our AI extract your professional profile with high precision.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="step-icon">2</div>
+                    <div class="step-content">
+                        <h3>AI Skill Analysis</h3>
+                        <p>Our AI analyzes your skills and compares them with thousands of job listings instantly.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="step-icon">3</div>
+                    <div class="step-content">
+                        <h3>Get Smart Recommendations</h3>
+                        <p>Receive the best job matches tailored specifically to your unique expertise and goals.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="step-icon">4</div>
+                    <div class="step-content">
+                        <h3>Apply Instantly</h3>
+                        <p>Apply to jobs with a single click and track your application progress in real-time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section id="team" class="section fade-in-section">
+            <div class="section-header">
+                <div class="section-tag">The Builders</div>
+                <h2>Meet the Visionaries Behind Hirotix</h2>
+                <p style="color: var(--secondary-text)">Driven by innovation and guided by world-class expertise.</p>
+            </div>
+
+            <div class="team-grid">
+                <!-- Team Member 1 -->
+                <div class="team-card glass">
+                    <div class="member-image-wrapper">
+                        <div class="member-image"
+                            style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">MH</div>
+                        <div class="member-socials">
+                            <a href="#"><ion-icon name="logo-linkedin"></ion-icon></a>
+                            <a href="#"><ion-icon name="logo-github"></ion-icon></a>
+                        </div>
+                    </div>
+                    <div class="member-info">
+                        <span class="member-role-tag">Lead Full-Stack</span>
+                        <h3>Muzaffar Hussain</h3>
+                        <p>Architected the Hirotix core system and designed the premium fluid experience.</p>
+                        <div class="guide-badge">
+                            <ion-icon name="star"></ion-icon>
+                            <span>Guided by Prof. Mahwish Momin</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Member 2 -->
+                <div class="team-card glass">
+                    <div class="member-image-wrapper">
+                        <div class="member-image"
+                            style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">SG</div>
+                        <div class="member-socials">
+                            <a href="#"><ion-icon name="logo-linkedin"></ion-icon></a>
+                            <a href="#"><ion-icon name="logo-github"></ion-icon></a>
+                        </div>
+                    </div>
+                    <div class="member-info">
+                        <span class="member-role-tag">Integration Lead</span>
+                        <h3>Sayyed Guftan</h3>
+                        <p>Spearheaded system integration and managed project-wide technical documentation.</p>
+                        <div class="guide-badge">
+                            <ion-icon name="star"></ion-icon>
+                            <span>Guided by Prof. Affan Khan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section fade-in-section">
+            <div class="bg-shape shape-1"
+                style="width:200px; height:200px; top:-50px; right:-50px; left:auto; background:var(--accent-color)">
+            </div>
+            <h2>Ready to transform your career?</h2>
+            <p style="margin-bottom: 30px;">Join thousands of professionals finding their dream companies through
+                Hirotix.</p>
+            <a href="register.html" class="btn btn-large btn-primary">Get Started Now</a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="#home" class="logo-brand">
+                    <span class="brand-text">Hirotix<span class="brand-dot">.</span></span>
+                </a>
+                <p class="footer-motto">Empowering careers through high-precision AI recruitment. Our platform connects
+                    the brightest minds with world-class opportunities.</p>
+                <div class="footer-socials">
+                    <a href="#" class="social-link"><ion-icon name="logo-linkedin"></ion-icon></a>
+                    <a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a>
+                    <a href="#" class="social-link"><ion-icon name="logo-github"></ion-icon></a>
+                    <a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">AI Features</a></li>
+                        <li><a href="#how-it-works">How it Works</a></li>
+                        <li><a href="login.html">Job Feed</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">AI Resume Guide</a></li>
+                        <li><a href="#">Career Blog</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#team">Our Team</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#">About Project</a></li>
+                        <li><a href="#">Academic Info</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Hirotix Project. All rights reserved. Designed for College Project Submission.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
