@@ -2,6 +2,7 @@ package com.hirotix.backend.service;
 
 import com.hirotix.backend.entity.Job;
 import com.hirotix.backend.entity.Profile;
+import com.hirotix.backend.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
@@ -21,8 +22,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AIService {
 
-    private final String PYTHON_SERVICE_URL = "http://localhost:5000";
-    private final RestTemplate restTemplate = new RestTemplate(); // For simplicity, can be a Bean
+    private final JobRepository jobRepository;
+    private final String PYTHON_SERVICE_URL = "http://127.0.0.1:5000";
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public Map<String, Object> parseResume(String filePath) {
         HttpHeaders headers = new HttpHeaders();
@@ -67,14 +69,23 @@ public class AIService {
         }
     }
 
-    public Map<String, Object> chat(String message) {
+    public Map<String, Object> chat(String message, List<Map<String, String>> history) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("message", message);
+        // Fetch all jobs to provide context to the AI
+        List<Job> allJobs = jobRepository.findAll();
+        String jobContext = allJobs.stream()
+                .map(j -> String.format("- Title: %s, Company: %s, Description: %s", 
+                        j.getTitle(), j.getCompany(), j.getDescription()))
+                .collect(Collectors.joining("\n"));
 
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("message", message);
+        requestBody.put("context", jobContext);
+        requestBody.put("history", history);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(

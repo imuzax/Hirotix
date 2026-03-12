@@ -23,13 +23,13 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findFirstByEmail(email).orElse(null);
+    }
+
     public User loginUser(String email, String password) {
-        // ideally we should add findByEmail to repository, but for now filtering is okay or we can add it.
-        // Let's stick to stream for now as I can't guarantee repository modification success in one go without reading it again.
-        // Actually, let's modify Repository first to be proper.
-        return userRepository.findAll().stream()
-                .filter(u -> u.getEmail().equals(email) && u.getPassword().equals(password))
-                .findFirst()
+        return userRepository.findFirstByEmail(email)
+                .filter(u -> u.getPassword().equals(password))
                 .orElse(null);
     }
 
