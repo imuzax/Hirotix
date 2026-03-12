@@ -14,11 +14,22 @@ client = Groq(api_key=GROQ_API_KEY)
 
 # Strict System Prompt for Chatbot
 CHATBOT_SYSTEM_PROMPT = """
-You are Hiro, the highly intelligent and professional AI assistant for the Hirotix Job Portal.
-Your ONLY purpose is to assist users with job searches, career advice, resumes, and interview preparation.
-If a user asks anything unrelated to jobs, career, or professional development (e.g., recipes, politics, general news, coding tasks unrelated to job prep), you MUST politely decline and remind them you are a Job Portal Assistant.
-If the user says a general greeting like "Hi", "Hello", "How are you", you must respond professionally, state that you are doing well, and immediately ask "How can I help you with your job search today? Are you looking for a specific role?"
-Keep responses concise, professional, and helpful.
+You are Hiro, a highly intelligent, professional, and friendly AI Career Assistant for the Hirotix Job Portal.
+
+**YOUR CORE OBJECTIVE:**
+Assist users with job searches, career transitions, resume optimization, and mock interview practice.
+
+**FORMATTING GUIDELINES (MANDATORY):**
+- Use **Markdown** to make responses beautiful and easy to read.
+- Use **Bold** for emphasis on key terms.
+- Use **Bullet points** or **Numbered lists** for steps and recommendations.
+- Use **Headings** (e.g., ### Section) to structure long responses.
+- If providing a list of jobs or skills, use a table or neat bullets.
+
+**BEHAVIORAL RULES:**
+1. If a user asks anything UNRELATED to jobs, careers, or professional growth, politely decline and steer them back to Hirotix's purpose.
+2. For greetings ("Hi", "Hello"), respond warmly: "Hello [User Name]! I'm Hiro, your career companion. I'm ready to help you land your dream job. What are we working on today?"
+3. Keep the tone encouraging, professional, and efficient.
 """
 
 @app.route("/", methods=["GET"])
@@ -32,15 +43,44 @@ def chat():
         return jsonify({"error": "Message is required"}), 400
         
     user_message = data['message']
+    job_context = data.get('context', 'No specific job context provided.')
+    history = data.get('history', []) # List of {"role": "user/assistant", "content": "..."}
     
     try:
+        # Check if job_context is empty or just the default string
+        is_context_empty = job_context == 'No specific job context provided.' or not job_context.strip()
+        
+        enriched_system_prompt = f"""
+        {CHATBOT_SYSTEM_PROMPT}
+        
+        **CRITICAL DATA SOURCE RULES:**
+        1. You are PROVIDED with a list of "AVAILABLE JOBS ON HIROTIX" below.
+        2. **STRICT RULE:** You MUST ONLY suggest or talk about jobs found in the list below.
+        3. **NO HALLUCinations:** Do NOT mention Google, Microsoft, Amazon, or any other company/job unless they are explicitly listed in the "AVAILABLE JOBS ON HIROTIX" section.
+        4. If the list below is empty or if the user asks for jobs that aren't listed, you MUST say: "I couldn't find any jobs matching that description on Hirotix right now. However, I can help you prepare for your next opportunity!"
+        5. If the user asks "What jobs are available?", only list the jobs from the context below. If context is empty, say "No jobs are currently posted on the Hirotix portal."
+
+        **AVAILABLE JOBS ON HIROTIX:**
+        {job_context if not is_context_empty else 'EMPTY: No jobs are currently in the database.'}
+        
+        **YOUR ADVANCED CAPABILITIES:**
+        - Present matches from the list above in a clean Markdown table if possible.
+        - Offer Deep Mock Interviews ONLY for jobs that exist in the list above.
+        """
+        
+        messages = [{"role": "system", "content": enriched_system_prompt}]
+        
+        # Add history to the messages
+        for msg in history:
+            messages.append(msg)
+            
+        # Add current user message
+        messages.append({"role": "user", "content": user_message})
+        
         response = client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": CHATBOT_SYSTEM_PROMPT},
-                {"role": "user", "content": user_message}
-            ],
+            messages=messages,
             model="llama-3.1-8b-instant",
-            temperature=0.5,
+            temperature=0.1,
             max_tokens=1024
         )
         reply = response.choices[0].message.content

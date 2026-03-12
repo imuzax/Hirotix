@@ -19,8 +19,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        // Simple check if user already exists could be added here
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        if (userService.getUserByEmail(user.getEmail()) != null) {
+            return new ResponseEntity<>("Email already exists", HttpStatus.BAD_REQUEST);
+        }
         User savedUser = userService.saveUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
