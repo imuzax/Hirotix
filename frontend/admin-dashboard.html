@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hirotix</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/theme.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        .admin-table-container {
+            margin-top: 2rem;
+            overflow-x: auto;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .admin-table th, .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .admin-table th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .role-admin { background: rgba(255, 59, 48, 0.2); color: #ff3b30; }
+        .role-recruiter { background: rgba(0, 122, 255, 0.2); color: #007aff; }
+        .role-seeker { background: rgba(52, 199, 89, 0.2); color: #34c759; }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px;
+            transition: color 0.3s;
+        }
+        .action-btn.delete:hover { color: #ff3b30; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar glass">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-brand">
+                    <div class="brand-icon"></div>
+                    <span class="brand-text">Hirotix<span class="brand-dot">.</span></span>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#"><ion-icon name="grid-outline"></ion-icon> Overview</a></li>
+                    <li><a href="#"><ion-icon name="people-outline"></ion-icon> User Management</a></li>
+                    <li><a href="#"><ion-icon name="analytics-outline"></ion-icon> System Stats</a></li>
+                    <li><a href="#"><ion-icon name="settings-outline"></ion-icon> Settings</a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="themeToggle">
+                    <ion-icon name="moon-outline" class="dark-icon"></ion-icon>
+                    <ion-icon name="sunny-outline" class="light-icon"></ion-icon>
+                    <span>Dark Mode</span>
+                </button>
+                <button class="logout-btn" id="logoutBtn">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="welcome-text">
+                    <h1>Admin Control Center</h1>
+                    <p>Welcome back, <span id="adminName">Admin</span>. System is healthy.</p>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <section class="stats-grid">
+                <div class="stat-card glass animate-up">
+                    <div class="stat-value" id="totalUsersCount">0</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card glass animate-up" style="animation-delay: 0.1s;">
+                    <div class="stat-value" id="recruiterCount">0</div>
+                    <div class="stat-label">Active Recruiters</div>
+                </div>
+                <div class="stat-card glass animate-up" style="animation-delay: 0.2s;">
+                    <div class="stat-value" id="seekerCount">0</div>
+                    <div class="stat-label">Job Seekers</div>
+                </div>
+            </section>
+
+            <!-- User Management Section -->
+            <section class="dashboard-section glass mt-2">
+                <div class="section-header">
+                    <h2><ion-icon name="people"></ion-icon> User Directory</h2>
+                    <p>Manage all platform users and permissions.</p>
+                </div>
+
+                <div class="admin-table-container">
+                    <table class="admin-table" id="userTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- Data will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'ADMIN') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('adminName').textContent = user.fullName || 'Administrator';
+            
+            await loadUsers();
+
+            // Logout Logic
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                logout();
+                window.location.href = 'index.html';
+            });
+        });
+
+        async function loadUsers() {
+            try {
+                // Fetch all users from backend
+                const response = await fetch(`${API_BASE_URL}/users`);
+                const users = await response.json();
+
+                const tableBody = document.getElementById('userTableBody');
+                tableBody.innerHTML = '';
+
+                let recruiters = 0;
+                let seekers = 0;
+
+                users.forEach(u => {
+                    if (u.role === 'RECRUITER') recruiters++;
+                    if (u.role === 'SEEKER') seekers++;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${u.fullName}</td>
+                        <td>${u.email}</td>
+                        <td><span class="role-badge role-${u.role.toLowerCase().replace('_', '')}">${u.role}</span></td>
+                        <td>
+                            <button class="action-btn delete" onclick="deleteUserAccount(${u.id})">
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                document.getElementById('totalUsersCount').textContent = users.length;
+                document.getElementById('recruiterCount').textContent = recruiters;
+                document.getElementById('seekerCount').textContent = seekers;
+
+            } catch (error) {
+                console.error('Failed to load users:', error);
+            }
+        }
+
+        async function deleteUserAccount(id) {
+            if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('User deleted successfully');
+                    await loadUsers(); // Reload table
+                } else {
+                    alert('Failed to delete user');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
