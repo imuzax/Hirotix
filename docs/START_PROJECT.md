@@ -46,6 +46,16 @@ python main.py
 
 ---
 
+---
+
+## 🔐 Administrative Access
+The system initializes a default administrator account on first startup:
+- **Email**: `admin@hirotix.com`
+- **Password**: `admin123`
+- **Role**: Full System Access (ADMIN)
+
+---
+
 ### 💡 Troubleshooting Tips:
 - **Chatbot Error**: If you see "Sorry, trouble connecting...", verify that the Python terminal (Step 3) is still running.
 - **Login Failure**: If login fails, ensure both MySQL (Step 1) and IntelliJ (Step 2) are running.
