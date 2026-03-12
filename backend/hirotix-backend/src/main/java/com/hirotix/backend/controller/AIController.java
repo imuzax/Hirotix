@@ -53,16 +53,26 @@ public class AIController {
                 .map(job -> job.getTitle() + " " + job.getDescription())
                 .collect(Collectors.toList());
 
-        String resumeText = profile.getHeadline() + " " + profile.getSkills(); // Simplified fallback
+        String resumeText = profile.getHeadline() + " " + profile.getSkills();
         List<Map<String, Object>> matchResults = aiService.matchJobs(resumeText, jobDescriptions);
 
-        // Merge scores into results
+        // Fetch full job details and combine with scores
+        List<Map<String, Object>> enrichedResults = new java.util.ArrayList<>();
         for (int i = 0; i < allJobs.size(); i++) {
-            matchResults.get(i).put("jobId", allJobs.get(i).getId());
-            matchResults.get(i).put("jobTitle", allJobs.get(i).getTitle());
+            Job job = allJobs.get(i);
+            Map<String, Object> enriched = new java.util.HashMap<>();
+            enriched.put("job", job);
+            enriched.put("score", matchResults.get(i).get("score"));
+            enrichedResults.add(enriched);
         }
 
-        return ResponseEntity.ok(matchResults);
+        // Sort by score descending
+        enrichedResults.sort((a, b) -> Double.compare(
+                ((Number) b.get("score")).doubleValue(),
+                ((Number) a.get("score")).doubleValue()
+        ));
+
+        return ResponseEntity.ok(enrichedResults);
     }
 
     @GetMapping("/mock-interview/{userId}/{jobId}")
