@@ -971,207 +971,155 @@ body {
 }
 
 /* Team Section - Hirotix Synergy Hub (Solid & Box-Free) */
+/* Team Section - Hirotix Technical Pairs (Presentation Ready) */
 #team {
-    padding: 140px 5%;
-    background: radial-gradient(circle at 10% 10%, rgba(0, 113, 227, 0.04) 0%, transparent 60%),
-                radial-gradient(circle at 90% 90%, rgba(0, 113, 227, 0.04) 0%, transparent 60%);
+    padding: 120px 5%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 113, 227, 0.02) 0%, transparent 70%);
+    position: relative;
     overflow: hidden;
-    position: relative;
 }
 
-.synergy-container {
+.synergy-pairs-container {
     max-width: 1400px;
-    margin: 100px auto 0;
+    margin: 80px auto 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 500px;
+    z-index: 2;
 }
 
-.synergy-board-bg {
-    position: absolute;
-    inset: -50px;
-    background-image: 
-        linear-gradient(rgba(0, 113, 227, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 113, 227, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    mask-image: radial-gradient(circle, black 40%, transparent 85%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* Core Mentor Hub */
-.mentor-core-hub {
+.synergy-pair {
     position: relative;
-    z-index: 10;
     display: flex;
     flex-direction: column;
     gap: 40px;
+}
+
+/* Photo Nodes */
+.pair-nodes-wrapper {
+    position: relative;
+    height: 300px;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-.mentor-node {
-    width: 200px;
-    text-align: center;
-    position: relative;
-}
-
-.mentor-image-hex {
-    width: 130px;
-    height: 130px;
-    margin: 0 auto 15px;
-    position: relative;
+.profile-node {
+    width: 140px;
+    height: 140px;
+    position: absolute;
+    z-index: 5;
     background: var(--surface-bg);
     padding: 3px;
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    border: 1px solid var(--accent-color);
-}
-
-.mentor-image-hex::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    background: var(--accent-color);
-    clip-path: inherit;
-    z-index: -1;
-    opacity: 0.5;
-    filter: blur(10px);
-}
-
-.mentor-image-hex img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    clip-path: inherit;
-}
-
-.mentor-info-static h4 {
-    font-size: 1.1rem;
-    font-weight: 850;
-    color: var(--primary-text);
-    margin-bottom: 3px;
-}
-
-.mentor-info-static span {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    color: var(--accent-color);
-    letter-spacing: 0.1em;
-    font-weight: 700;
-}
-
-/* Student Profile Nodes */
-.member-node {
-    position: absolute;
-    width: 350px;
-    z-index: 10;
-}
-
-.member-node.left-node {
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    text-align: right;
-}
-
-.member-node.right-node {
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    text-align: left;
-}
-
-.node-img-static {
-    width: 110px;
-    height: 110px;
-    border-radius: 16px;
-    border: 1px solid var(--accent-color);
-    margin-bottom: 25px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-    object-fit: cover;
-}
-
-.member-node h3 {
-    font-size: 2rem;
-    font-weight: 900;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-    color: var(--primary-text);
-}
-
-.role-tag-static {
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: var(--accent-color);
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    margin-bottom: 20px;
-    display: block;
-}
-
-.bio-text-static {
-    font-size: 1rem;
-    color: var(--secondary-text);
-    line-height: 1.7;
-    margin-bottom: 25px;
-    max-width: 320px;
-}
-
-.member-node.left-node .bio-text-static { margin-left: auto; }
-
-.node-social-links {
-    display: flex;
-    gap: 20px;
-}
-
-.member-node.left-node .node-social-links { justify-content: flex-end; }
-
-.node-social-links a {
-    font-size: 1.4rem;
-    color: var(--secondary-text);
+    border: 1px solid var(--glass-border);
     transition: var(--transition-smooth);
 }
 
-.node-social-links a:hover { 
-    color: var(--accent-color);
-    transform: translateY(-3px);
+.profile-node img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* Fiber-Optic Connection Pipes */
-.fiber-pipe {
-    position: absolute;
-    height: 2px;
-    background: rgba(0, 113, 227, 0.2);
-    z-index: 5;
-    pointer-events: none;
-    box-shadow: 0 0 15px rgba(0, 113, 227, 0.1);
-}
-
-.fiber-pipe.left-pipe {
-    left: 200px;
-    right: calc(50% + 80px); /* Connects to the left side of the center hub */
-    top: 50%;
-    transform: translateY(-50%);
-    background: linear-gradient(90deg, var(--accent-color), transparent);
-}
-
-.fiber-pipe.right-pipe {
-    right: 200px;
-    left: calc(50% + 80px); /* Connects to the right side of the center hub */
-    top: 50%;
-    transform: translateY(-50%);
-    background: linear-gradient(-90deg, var(--accent-color), transparent);
-}
-
-.data-pulse {
-    position: absolute;
-    width: 10px;
-    height: 2px;
-    background: white;
+.student-node {
     top: 0;
-    box-shadow: 0 0 10px white;
-    opacity: 0;
+    left: 10%;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 113, 227, 0.1);
+}
+
+.guide-node {
+    bottom: 0;
+    right: 10%;
+    border-radius: 50%; /* Differentiates mentor from student */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); /* Hex tech look */
+    border-color: var(--accent-color);
+}
+
+/* Synergy Link Bridge */
+.synergy-bridge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-color), transparent, var(--accent-color));
+    transform: translate(-50%, -50%) rotate(-35deg);
+    z-index: 2;
+    opacity: 0.4;
+    box-shadow: 0 0 15px var(--accent-color);
+}
+
+/* Info Labels */
+.pair-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 20px;
+}
+
+.info-block {
+    flex: 1;
+}
+
+.info-block.right-align { text-align: right; }
+
+.node-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.node-name {
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 5px;
+    color: var(--primary-text);
+}
+
+.node-role {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--secondary-text);
+    letter-spacing: 0.1em;
+}
+
+.pair-bio {
+    padding: 20px;
+    color: var(--secondary-text);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    border-left: 2px solid rgba(0, 113, 227, 0.1);
+    margin-top: 10px;
+}
+
+.pair-socials {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 0 20px;
+}
+
+.pair-socials a {
+    font-size: 1.3rem;
+    color: var(--secondary-text);
+    transition: color 0.3s;
+}
+
+.pair-socials a:hover { color: var(--accent-color); }
+
+/* Responsive Grid */
+@media (max-width: 1100px) {
+    .synergy-pairs-container {
+        grid-template-columns: 1fr;
+        gap: 80px;
+    }
 }
 
 @keyframes dataFlowLeft {
