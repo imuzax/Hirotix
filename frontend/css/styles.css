@@ -970,235 +970,246 @@ body {
     font-size: 1.4rem;
 }
 
+/* Team Section - Hirotix Synergy Hub (Solid & Box-Free) */
 #team {
+    padding: 140px 5%;
+    background: radial-gradient(circle at 10% 10%, rgba(0, 113, 227, 0.04) 0%, transparent 60%),
+                radial-gradient(circle at 90% 90%, rgba(0, 113, 227, 0.04) 0%, transparent 60%);
+    overflow: hidden;
     position: relative;
-    background-image: radial-gradient(rgba(0, 113, 227, 0.05) 1px, transparent 1px);
-    background-size: 30px 30px;
 }
 
-#team::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 50%, transparent 0%, var(--surface-bg) 100%);
-    pointer-events: none;
-}
-
-/* Team Section - Network Hub Style */
-#team {
-    padding: 120px 5%;
-    background-image: radial-gradient(rgba(0, 113, 227, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-}
-
-.team-network-container {
+.synergy-container {
+    max-width: 1400px;
+    margin: 100px auto 0;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0;
-    max-width: 1400px;
-    margin: 80px auto 0;
-    position: relative;
+    min-height: 500px;
 }
 
-.network-col {
-    flex: 1;
+.synergy-board-bg {
+    position: absolute;
+    inset: -50px;
+    background-image: 
+        linear-gradient(rgba(0, 113, 227, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 113, 227, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(circle, black 40%, transparent 85%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Core Mentor Hub */
+.mentor-core-hub {
+    position: relative;
+    z-index: 10;
     display: flex;
     flex-direction: column;
+    gap: 40px;
     align-items: center;
-    gap: 80px;
-    position: relative;
-    z-index: 2;
 }
 
-.network-col.center-hub {
-    flex: 0 0 300px;
-}
-
-/* Profile Nodes */
-.node-item {
+.mentor-node {
+    width: 200px;
     text-align: center;
     position: relative;
-    width: 100%;
 }
 
-.node-image-wrapper {
+.mentor-image-hex {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 15px;
     position: relative;
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 20px;
-    z-index: 3;
+    background: var(--surface-bg);
+    padding: 3px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    border: 1px solid var(--accent-color);
 }
 
-.node-img {
+.mentor-image-hex::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: var(--accent-color);
+    clip-path: inherit;
+    z-index: -1;
+    opacity: 0.5;
+    filter: blur(10px);
+}
+
+.mentor-image-hex img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--surface-bg);
-    box-shadow: 0 0 0 2px var(--accent-color), 0 15px 30px rgba(0,0,0,0.2);
-    transition: var(--transition-smooth);
+    clip-path: inherit;
 }
 
-.node-item:hover .node-img {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px var(--accent-color), 0 20px 40px rgba(0,0,0,0.3);
-}
-
-.node-content {
-    background: transparent;
-}
-
-.node-name {
-    font-size: 1.4rem;
+.mentor-info-static h4 {
+    font-size: 1.1rem;
     font-weight: 850;
-    margin-bottom: 5px;
+    color: var(--primary-text);
+    margin-bottom: 3px;
+}
+
+.mentor-info-static span {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    letter-spacing: 0.1em;
+    font-weight: 700;
+}
+
+/* Student Profile Nodes */
+.member-node {
+    position: absolute;
+    width: 350px;
+    z-index: 10;
+}
+
+.member-node.left-node {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: right;
+}
+
+.member-node.right-node {
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: left;
+}
+
+.node-img-static {
+    width: 110px;
+    height: 110px;
+    border-radius: 16px;
+    border: 1px solid var(--accent-color);
+    margin-bottom: 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    object-fit: cover;
+}
+
+.member-node h3 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 8px;
     letter-spacing: -0.02em;
     color: var(--primary-text);
 }
 
-.node-tag {
-    display: inline-block;
-    padding: 4px 12px;
-    background: rgba(0, 113, 227, 0.1);
-    color: var(--accent-color);
-    border-radius: 8px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 12px;
-}
-
-.node-bio {
-    font-size: 0.85rem;
-    color: var(--secondary-text);
-    line-height: 1.5;
-    max-width: 250px;
-    margin: 0 auto 15px;
-}
-
-.node-socials {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.node-social-btn {
-    font-size: 1.2rem;
-    color: var(--secondary-text);
-    transition: color 0.3s;
-}
-
-.node-social-btn:hover {
-    color: var(--accent-color);
-}
-
-/* Guide Hub Specifics */
-.guide-node .node-img {
-    width: 100px;
-    height: 100px;
-    border-radius: 20px; /* Different shape for mentors */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.guide-node .node-name {
-    font-size: 1.1rem;
-    color: var(--accent-color);
-}
-
-.guide-node .node-tag {
-    background: var(--accent-color);
-    color: white;
-    font-size: 0.6rem;
-}
-
-/* Connection Lines Utility */
-.network-connector {
-    position: absolute;
-    top: 50%;
-    height: 1px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(0, 113, 227, 0.4) 20%, 
-        rgba(0, 113, 227, 0.4) 80%, 
-        transparent
-    );
-    z-index: 1;
-    pointer-events: none;
-}
-
-.connector-left {
-    left: 20%;
-    right: 55%;
-    transform: translateY(-50%);
-}
-
-.connector-right {
-    left: 55%;
-    right: 20%;
-    transform: translateY(-50%);
-}
-
-.network-connector::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 10px;
-    background: radial-gradient(ellipse at center, rgba(0, 113, 227, 0.1) 0%, transparent 70%);
-    transform: translateY(-50%);
-}
-
-/* Responsive Network */
-@media (max-width: 992px) {
-    .team-network-container {
-        flex-direction: column;
-        gap: 60px;
-    }
-    
-    .network-col {
-        width: 100%;
-        gap: 40px;
-    }
-    
-    .network-col.center-hub {
-        order: -1;
-        flex: none;
-    }
-    
-    .network-connector {
-        display: none;
-    }
-}
-
-.member-role-tag {
-    display: inline-block;
-    padding: 5px 14px;
-    background: rgba(0, 113, 227, 0.1);
-    color: var(--accent-color);
-    border-radius: var(--radius-pill);
+.role-tag-static {
     font-size: 0.8rem;
-    font-weight: 700;
-    margin-bottom: 12px;
+    font-weight: 800;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 20px;
+    display: block;
 }
 
-.guide-badge {
-    margin-top: 25px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.9rem;
-    font-weight: 600;
+.bio-text-static {
+    font-size: 1rem;
     color: var(--secondary-text);
-    padding-top: 20px;
-    border-top: 1px solid var(--glass-border);
+    line-height: 1.7;
+    margin-bottom: 25px;
+    max-width: 320px;
 }
 
-.guide-badge ion-icon {
-    color: #f6d365;
-    font-size: 1.1rem;
+.member-node.left-node .bio-text-static { margin-left: auto; }
+
+.node-social-links {
+    display: flex;
+    gap: 20px;
+}
+
+.member-node.left-node .node-social-links { justify-content: flex-end; }
+
+.node-social-links a {
+    font-size: 1.4rem;
+    color: var(--secondary-text);
+    transition: var(--transition-smooth);
+}
+
+.node-social-links a:hover { 
+    color: var(--accent-color);
+    transform: translateY(-3px);
+}
+
+/* Fiber-Optic Connection Pipes */
+.fiber-pipe {
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    background: rgba(0, 113, 227, 0.4);
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: 0 0 15px rgba(0, 113, 227, 0.2);
+}
+
+.fiber-pipe.left-pipe {
+    left: 150px;
+    width: calc(50% - 280px);
+    transform: translateY(-50%);
+    background: linear-gradient(90deg, var(--accent-color), transparent);
+}
+
+.fiber-pipe.right-pipe {
+    right: 150px;
+    width: calc(50% - 280px);
+    transform: translateY(-50%);
+    background: linear-gradient(-90deg, var(--accent-color), transparent);
+}
+
+.data-pulse {
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    background: white;
+    top: 0;
+    box-shadow: 0 0 10px white;
+    opacity: 0;
+}
+
+@keyframes dataFlowLeft {
+    0% { left: 0%; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+}
+
+@keyframes dataFlowRight {
+    0% { right: 0%; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { right: 100%; opacity: 0; }
+}
+
+.left-pipe .data-pulse { animation: dataFlowLeft 4s infinite linear; }
+.right-pipe .data-pulse { animation: dataFlowRight 4s infinite linear; }
+
+/* Responsive Synergy Hub */
+@media (max-width: 1200px) {
+    .synergy-container {
+        flex-direction: column;
+        gap: 80px;
+        min-height: auto;
+    }
+    
+    .member-node {
+        position: static;
+        transform: none !important;
+        text-align: center !important;
+        width: 100%;
+    }
+    
+    .member-node .bio-text-static { margin: 0 auto 20px !important; }
+    .node-social-links { justify-content: center !important; }
+    
+    .fiber-pipe { display: none; }
+    .mentor-core-hub { order: -1; }
 }
 
 /* Call to Action */
