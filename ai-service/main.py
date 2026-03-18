@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
 import io
 import re
 import os
@@ -6,10 +7,13 @@ import json
 from pdfminer.high_level import extract_text as extract_pdf_text
 from groq import Groq
 
+# Load environment variables
+load_dotenv()
+
 app = Flask(__name__)
 
 # Initialize Groq Client
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "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")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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")
 client = Groq(api_key=GROQ_API_KEY)
 
 # Strict System Prompt for Chatbot
@@ -213,4 +217,6 @@ def match_jobs():
     return jsonify(results)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.getenv("PORT", 5000))
+    print(f"🚀 Hirotix AI Service starting on port {port}...")
+    app.run(host="0.0.0.0", port=port)

@@ -166,11 +166,26 @@ async function getAIJobRecommendations(userId) {
 // ========== AI MOCK INTERVIEW API ========== //
 
 /**
+ * Health check for the AI Pipeline (Java & Python)
+ */
+async function checkServiceHealth() {
+    try {
+        const res = await fetch(`${BASE_URL}/health`); // Returns Spring Boot health
+        return res.ok;
+    } catch {
+        return false;
+    }
+}
+
+/**
  * Handles communication with the Spring Boot /api/chat endpoint 
  * for the AI Mock Interview (Gemini Integration - ChatController)
  */
 async function sendChatMessage(userId, messageText, history = []) {
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
         const res = await fetch(`${BASE_URL}/chat`, {
             method: 'POST',
             headers: {
@@ -180,15 +195,22 @@ async function sendChatMessage(userId, messageText, history = []) {
                 message: messageText,
                 userId: userId,
                 history: history
-            })
+            }),
+            signal: controller.signal
         });
 
-        if (!res.ok) throw new Error("Network error");
-        const data = await res.json();
+        clearTimeout(timeoutId);
 
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}));
+            throw new Error(errorData.error || `Server Error (${res.status})`);
+        }
+        
+        const data = await res.json();
         return data.reply || "No reply logic found";
     } catch (error) {
-        console.error("Gemini AI Chat Error: ", error);
+        console.error("AI Chat Error: ", error);
+        if (error.name === 'AbortError') throw new Error("Request timed out. AI service is slow.");
         throw error;
     }
 }
