@@ -1,0 +1,21 @@
+===========================================================
+    HIROTIX AI - GROQ API KEY SETUP
+===========================================================
+
+Hiro (Aapka AI Assistant) ko active karne ke liye ek valid 
+API key ki zaroorat hai. Presentation se pehle isse fix kar lijiye:
+
+STEPS:
+1.  Go to: https://console.groq.com/keys
+2.  Login ya Signup karein (Google account works best).
+3.  "Create API Key" button par click karein.
+4.  Key ko naam dein (ex: "HirotixPresentation").
+5.  Key copy karein.
+6.  Open file:  ai-service/.env
+7.  Replace the line:
+    GROQ_API_KEY=yahan_apni_key_paste_karein
+
+8.  Restart START_HIROTIX.bat
+
+NOTE: Groq key bilkul free hai aur ye presentation ke liye perfect hai!
+===========================================================
