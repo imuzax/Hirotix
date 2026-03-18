@@ -1141,24 +1141,25 @@ body {
 /* Fiber-Optic Connection Pipes */
 .fiber-pipe {
     position: absolute;
-    top: 50%;
     height: 2px;
-    background: rgba(0, 113, 227, 0.4);
+    background: rgba(0, 113, 227, 0.2);
     z-index: 5;
     pointer-events: none;
-    box-shadow: 0 0 15px rgba(0, 113, 227, 0.2);
+    box-shadow: 0 0 15px rgba(0, 113, 227, 0.1);
 }
 
 .fiber-pipe.left-pipe {
-    left: 150px;
-    width: calc(50% - 280px);
+    left: 200px;
+    right: calc(50% + 80px); /* Connects to the left side of the center hub */
+    top: 50%;
     transform: translateY(-50%);
     background: linear-gradient(90deg, var(--accent-color), transparent);
 }
 
 .fiber-pipe.right-pipe {
-    right: 150px;
-    width: calc(50% - 280px);
+    right: 200px;
+    left: calc(50% + 80px); /* Connects to the right side of the center hub */
+    top: 50%;
     transform: translateY(-50%);
     background: linear-gradient(-90deg, var(--accent-color), transparent);
 }
