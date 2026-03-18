@@ -53,6 +53,10 @@
             </nav>
 
             <div class="sidebar-footer">
+                <div class="service-status">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">AI Service: Offline</span>
+                </div>
                 <button class="sidebar-btn theme-switcher" id="themeToggle" onclick="toggleTheme()"
                     style="margin-bottom: 10px;">
                     <ion-icon name="moon-outline"></ion-icon> Dark Mode
@@ -205,6 +209,26 @@
         }
 
         loadMemory();
+
+        // Service Health Polling
+        async function updateServiceStatus() {
+            const isOnline = await checkServiceHealth();
+            const dot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            
+            if (isOnline) {
+                dot.classList.add('online');
+                statusText.innerText = 'AI Service: Online';
+                statusText.style.color = '#34c759';
+            } else {
+                dot.classList.remove('online');
+                statusText.innerText = 'AI Service: Offline';
+                statusText.style.color = '#ff3b30';
+            }
+        }
+
+        updateServiceStatus();
+        setInterval(updateServiceStatus, 10000); // Check every 10s
 
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();

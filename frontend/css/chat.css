@@ -123,6 +123,45 @@
     border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+/* Service Status Indicator */
+.service-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--secondary-text);
+    margin-bottom: 10px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff3b30; /* Default offline */
+    position: relative;
+}
+
+.status-dot.online {
+    background: #34c759;
+    box-shadow: 0 0 10px rgba(52, 199, 89, 0.5);
+}
+
+.status-dot.online::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 1px solid #34c759;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+
 /* Main Chat Section */
 .chat-main {
     flex-grow: 1;
