@@ -1,79 +1,65 @@
 package com.hirotix.backend.service;
 
-import com.hirotix.backend.entity.Application;
-import com.hirotix.backend.entity.Job;
-import com.hirotix.backend.entity.User;
+import com.hirotix.backend.model.Application;
+import com.hirotix.backend.model.Job;
+import com.hirotix.backend.model.Profile;
+import com.hirotix.backend.model.User;
 import com.hirotix.backend.repository.ApplicationRepository;
-import com.hirotix.backend.repository.JobRepository;
-import com.hirotix.backend.repository.UserRepository;
 import com.hirotix.backend.repository.ProfileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ApplicationService {
 
-    private final ApplicationRepository applicationRepository;
-    private final JobRepository jobRepository;
-    private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
-    private final AIService aiService;
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
-    public ApplicationService(ApplicationRepository applicationRepository, JobRepository jobRepository, 
-                              UserRepository userRepository, ProfileRepository profileRepository, 
-                              AIService aiService) {
-        this.applicationRepository = applicationRepository;
-        this.jobRepository = jobRepository;
-        this.userRepository = userRepository;
-        this.profileRepository = profileRepository;
-        this.aiService = aiService;
-    }
+    @Autowired
+    private JobService jobService;
 
-    public Application applyToJob(Long userId, Long jobId) {
-        User seeker = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
+    @Autowired
+    private UserService userService;
 
-        // Check if user has a resume uploaded
-        com.hirotix.backend.entity.Profile profile = profileRepository.findByUser(seeker).orElse(null);
-        if (profile == null || profile.getResumeFilePath() == null) {
-            throw new RuntimeException("Resume is mandatory. Please upload your resume in the profile section before applying.");
+    @Autowired
+    private ProfileRepository profileRepository;
+
+    public Application applyToJob(Long jobId, Long userId) {
+        Job job = jobService.getJobById(jobId);
+        User user = userService.getUserById(userId);
+
+        // Check if profile exists and has a resume
+        Profile profile = profileRepository.findByUserId(userId).orElse(null);
+        if (profile == null || profile.getResumeFilePath() == null || profile.getResumeFilePath().isEmpty()) {
+            throw new RuntimeException("Resume required: Please upload your resume in the profile section before applying.");
+        }
+
+        // Check if already applied
+        if (applicationRepository.findByJobIdAndUserId(jobId, userId).isPresent()) {
+            throw new RuntimeException("You have already applied for this job.");
         }
 
         Application application = new Application();
-        application.setSeeker(seeker);
         application.setJob(job);
-        application.setStatus("APPLIED");
-        application.setAppliedDate(LocalDateTime.now());
-
-        // Calculate AI Match Score
-        try {
-            String resumeText = (profile.getHeadline() != null ? profile.getHeadline() : "") + " " + (profile.getSkills() != null ? profile.getSkills() : "");
-            String jobDesc = job.getTitle() + " " + job.getDescription();
-            List<Map<String, Object>> results = aiService.matchJobs(resumeText, Collections.singletonList(jobDesc));
-            if (results != null && !results.isEmpty()) {
-                Double score = (Double) results.get(0).get("score");
-                application.setMatchScore(score * 100); // Store as percentage
-            } else {
-                application.setMatchScore(0.0);
-            }
-        } catch (Exception e) {
-            application.setMatchScore(0.0);
-        }
+        application.setUser(user);
+        application.setAppliedAt(LocalDateTime.now());
+        application.setStatus("PENDING");
 
         return applicationRepository.save(application);
     }
 
-    public List<Application> getApplicationsForJob(Long jobId) {
-        Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
-        return applicationRepository.findByJob(job);
+    public List<Application> getApplicationsByJob(Long jobId) {
+        return applicationRepository.findByJobId(jobId);
     }
 
-    public List<Application> getMyApplications(Long userId) {
-        User seeker = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        return applicationRepository.findBySeeker(seeker);
+    public List<Application> getApplicationsByUser(Long userId) {
+        return applicationRepository.findByUserId(userId);
+    }
+
+    public List<Application> getAllApplications() {
+        return applicationRepository.findAll();
     }
 }
