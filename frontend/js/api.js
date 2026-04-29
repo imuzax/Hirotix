@@ -56,6 +56,32 @@ async function register(userData) {
     return await res.json();
 }
 
+async function getAllUsers() {
+    try {
+        const res = await fetch(`${BASE_URL}/users`);
+        if (!res.ok) return [];
+        return await res.json();
+    } catch { return []; }
+}
+
+async function deleteUser(userId) {
+    const res = await fetch(`${BASE_URL}/users/${userId}`, {
+        method: 'DELETE'
+    });
+    if (!res.ok) throw new Error('Failed to delete user');
+    return true;
+}
+
+async function updateUser(userId, userData) {
+    const res = await fetch(`${BASE_URL}/users/${userId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(userData)
+    });
+    if (!res.ok) throw new Error('Failed to update user');
+    return await res.json();
+}
+
 
 // ========== JOBS & RECRUITER ========== //
 
@@ -94,6 +120,30 @@ async function searchJobsAPI(query, location = '') {
     } catch { return []; }
 }
 
+async function updateJob(jobId, jobData) {
+    const res = await fetch(`${BASE_URL}/jobs/${jobId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(jobData)
+    });
+    if (!res.ok) throw new Error('Failed to update job');
+    return await res.json();
+}
+
+async function deleteJob(jobId) {
+    const res = await fetch(`${BASE_URL}/jobs/${jobId}`, {
+        method: 'DELETE'
+    });
+    if (!res.ok) throw new Error('Failed to delete job');
+    return true;
+}
+
+async function getJobById(jobId) {
+    const res = await fetch(`${BASE_URL}/jobs/${jobId}`);
+    if (!res.ok) throw new Error('Job not found');
+    return await res.json();
+}
+
 
 // ========== APPLICATIONS ========== //
 
@@ -117,7 +167,10 @@ async function applyForJob(jobId, userId) {
     const res = await fetch(`${BASE_URL}/jobs/${jobId}/apply?userId=${userId}`, {
         method: 'POST'
     });
-    if (!res.ok) throw new Error('Failed to apply or already applied');
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: 'Failed to apply or already applied' }));
+        throw new Error(err.message || 'Failed to apply or already applied');
+    }
     return await res.json();
 }
 
@@ -146,6 +199,10 @@ async function uploadResume(userId, file) {
     return await res.text();
 }
 
+function getResumeViewUrl(userId) {
+    return `${BASE_URL}/profiles/${userId}/resume`;
+}
+
 async function parseResumeAI(userId) {
     const res = await fetch(`${BASE_URL}/ai/parse-resume/${userId}`, {
         method: 'POST'
@@ -166,15 +223,22 @@ async function getAIJobRecommendations(userId) {
 // ========== AI MOCK INTERVIEW API ========== //
 
 /**
- * Health check for the AI Pipeline (Java & Python)
+ * Multi-component health check for Hirotix
  */
 async function checkServiceHealth() {
+    const results = { java: false, python: false };
     try {
-        const res = await fetch(`${BASE_URL}/health`); // Returns Spring Boot health
-        return res.ok;
-    } catch {
-        return false;
-    }
+        const javaRes = await fetch(`${BASE_URL}/auth/login`, { method: 'OPTIONS' }); // Lightweight check
+        results.java = javaRes.ok || javaRes.status === 405; // 405 is fine for OPTIONS
+    } catch {}
+
+    try {
+        const pyRes = await fetch(`http://127.0.0.1:5000/health`);
+        const pyData = await pyRes.json();
+        results.python = pyData.status === 'healthy';
+    } catch {}
+
+    return results;
 }
 
 /**
@@ -213,4 +277,50 @@ async function sendChatMessage(userId, messageText, history = []) {
         if (error.name === 'AbortError') throw new Error("Request timed out. AI service is slow.");
         throw error;
     }
+}
+// ========== ADMIN SUITE ========== //
+
+async function getAdminStats() {
+    try {
+        const res = await fetch(`${BASE_URL}/admin/stats`);
+        if (!res.ok) return null;
+        return await res.json();
+    } catch { return null; }
+}
+
+async function getAdminOnboarding() {
+    try {
+        const res = await fetch(`${BASE_URL}/admin/onboarding`);
+        if (!res.ok) return [];
+        return await res.json();
+    } catch { return []; }
+}
+
+async function getAdminApplications() {
+    try {
+        const res = await fetch(`${BASE_URL}/admin/applications`);
+        if (!res.ok) return [];
+        return await res.json();
+    } catch { return []; }
+}
+
+// ========== CONTACT MESSAGES ========== //
+
+async function submitContact(contactData) {
+    const res = await fetch(`${BASE_URL}/contacts`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(contactData)
+    });
+
+    if (!res.ok) throw new Error('Failed to send message. Please try again.');
+    return await res.json();
+}
+
+async function getContacts() {
+    try {
+        const res = await fetch(`${BASE_URL}/contacts`);
+        if (!res.ok) return [];
+        return await res.json();
+    } catch { return []; }
 }
