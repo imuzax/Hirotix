@@ -37,6 +37,12 @@ public class ApplicationService {
         User seeker = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
+        // Check if user has a resume uploaded
+        com.hirotix.backend.entity.Profile profile = profileRepository.findByUser(seeker).orElse(null);
+        if (profile == null || profile.getResumeFilePath() == null) {
+            throw new RuntimeException("Resume is mandatory. Please upload your resume in the profile section before applying.");
+        }
+
         Application application = new Application();
         application.setSeeker(seeker);
         application.setJob(job);
@@ -45,15 +51,12 @@ public class ApplicationService {
 
         // Calculate AI Match Score
         try {
-            com.hirotix.backend.entity.Profile profile = profileRepository.findByUser(seeker).orElse(null);
-            if (profile != null) {
-                String resumeText = profile.getHeadline() + " " + profile.getSkills();
-                String jobDesc = job.getTitle() + " " + job.getDescription();
-                List<Map<String, Object>> results = aiService.matchJobs(resumeText, Collections.singletonList(jobDesc));
-                if (results != null && !results.isEmpty()) {
-                    Double score = (Double) results.get(0).get("score");
-                    application.setMatchScore(score * 100); // Store as percentage
-                }
+            String resumeText = (profile.getHeadline() != null ? profile.getHeadline() : "") + " " + (profile.getSkills() != null ? profile.getSkills() : "");
+            String jobDesc = job.getTitle() + " " + job.getDescription();
+            List<Map<String, Object>> results = aiService.matchJobs(resumeText, Collections.singletonList(jobDesc));
+            if (results != null && !results.isEmpty()) {
+                Double score = (Double) results.get(0).get("score");
+                application.setMatchScore(score * 100); // Store as percentage
             } else {
                 application.setMatchScore(0.0);
             }
