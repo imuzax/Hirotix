@@ -24,48 +24,51 @@ public class AIService {
 
     private final JobRepository jobRepository;
     private final String PYTHON_SERVICE_URL = "http://127.0.0.1:5000";
-    private final RestTemplate restTemplate = new RestTemplate();
+    
+    private RestTemplate getRestTemplate() {
+        org.springframework.http.client.SimpleClientHttpRequestFactory factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(3000); // 3s connect
+        factory.setReadTimeout(20000);   // 20s read
+        return new RestTemplate(factory);
+    }
 
     public Map<String, Object> parseResume(String filePath) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", new FileSystemResource(new File(filePath)));
-
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(
+            ResponseEntity<Map> response = getRestTemplate().postForEntity(
                     PYTHON_SERVICE_URL + "/parse",
                     requestEntity,
                     Map.class
             );
             return response.getBody();
         } catch (Exception e) {
-            throw new RuntimeException("AI Service Error: " + e.getMessage());
+             System.err.println("AI Parse Error: " + e.getMessage());
+            throw new RuntimeException("AI Parsing Error: Ensure Python AI service is running on Port 5000.");
         }
     }
 
     public List<Map<String, Object>> matchJobs(String resumeText, List<String> jobDescriptions) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("resume_text", resumeText);
         requestBody.put("job_descriptions", jobDescriptions);
-
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         try {
-            ResponseEntity<List> response = restTemplate.postForEntity(
+            ResponseEntity<List> response = getRestTemplate().postForEntity(
                     PYTHON_SERVICE_URL + "/match",
                     entity,
                     List.class
             );
             return (List<Map<String, Object>>) response.getBody();
         } catch (Exception e) {
-            throw new RuntimeException("AI Service Error: " + e.getMessage());
+            throw new RuntimeException("AI Match Error: " + e.getMessage());
         }
     }
 
@@ -73,11 +76,9 @@ public class AIService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // Fetch all jobs to provide context to the AI
         List<Job> allJobs = jobRepository.findAll();
         String jobContext = allJobs.stream()
-                .map(j -> String.format("- Title: %s, Company: %s, Description: %s", 
-                        j.getTitle(), j.getCompany(), j.getDescription()))
+                .map(j -> String.format("- %s at %s (%s)", j.getTitle(), j.getCompany(), j.getLocation()))
                 .collect(Collectors.joining("\n"));
 
         Map<String, Object> requestBody = new HashMap<>();
@@ -88,14 +89,22 @@ public class AIService {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(
+            ResponseEntity<Map> response = getRestTemplate().postForEntity(
                     PYTHON_SERVICE_URL + "/chat",
                     entity,
                     Map.class
             );
             return response.getBody();
+        } catch (org.springframework.web.client.ResourceAccessException e) {
+            System.err.println("CRITICAL: AI Service Communication Failure!");
+            if (e.getMessage().contains("Connection refused")) {
+                throw new RuntimeException("AI Service is NOT running. Please start START_HIROTIX.bat and ensure port 5000 is green.");
+            } else {
+                throw new RuntimeException("AI Service is responding too slowly. Please check your internet or Groq API limits.");
+            }
         } catch (Exception e) {
-            throw new RuntimeException("AI Chat Error: " + e.getMessage());
+            System.err.println("AI Chat Error: " + e.getMessage());
+            throw new RuntimeException("Hiro AI is currently exhausted. Try again in 10 seconds.");
         }
     }
 
@@ -110,14 +119,15 @@ public class AIService {
         HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(
+            ResponseEntity<Map> response = getRestTemplate().postForEntity(
                     PYTHON_SERVICE_URL + "/mock-interview",
                     entity,
                     Map.class
             );
             return response.getBody();
         } catch (Exception e) {
-            throw new RuntimeException("AI Mock Interview Error: " + e.getMessage());
+            System.err.println("AI Interview Generation Error: " + e.getMessage());
+            throw new RuntimeException("AI Mock Interview Error: Ensure Python AI service is active.");
         }
     }
 }
