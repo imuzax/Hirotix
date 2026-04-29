@@ -11,6 +11,49 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="js/theme.js"></script>
+    <style>
+        /* Emergency Fix for Modal Layout */
+        .modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            z-index: 999999 !important;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex !important;
+        }
+        .job-modal-expanded {
+            background: rgba(255, 255, 255, 0.95) !important;
+            width: 90% !important;
+            max-width: 1000px !important;
+            max-height: 85vh !important;
+            border-radius: 30px !important;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.15) !important;
+            border: 1px solid rgba(255,255,255,0.4) !important;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-hero { padding: 40px !important; }
+        .modal-body-scroll { overflow-y: auto !important; padding: 0 40px 40px !important; flex: 1; }
+        .modal-footer-premium { 
+            padding: 24px 40px !important; 
+            background: rgba(255,255,255,0.8) !important; 
+            border-top: 1px solid rgba(0,0,0,0.05) !important;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+    </style>
 </head>
 
 <body class="dashboard-body">
@@ -34,31 +77,29 @@
             </div>
 
             <nav class="sidebar-nav">
-                <button class="nav-item-btn active" data-target="overviewView">
+                <button type="button" class="nav-item-btn active" data-target="overviewView">
                     <ion-icon name="grid-outline" class="nav-icon"></ion-icon>
                     Overview
                 </button>
-                <button class="nav-item-btn" data-target="jobsView">
+                <button type="button" class="nav-item-btn" data-target="jobsView">
                     <ion-icon name="briefcase-outline" class="nav-icon"></ion-icon>
                     Find Jobs
                 </button>
-                <button class="nav-item-btn" data-target="applicationsView">
+                <button type="button" class="nav-item-btn" data-target="applicationsView">
                     <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
                     My Applications
                 </button>
-                <button class="nav-item-btn" onclick="window.location.href='resume-builder.html'">
+                <button type="button" class="nav-item-btn" onclick="window.location.href='resume-builder.html'">
                     <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
                     Resume Builder
                 </button>
-                <button class="nav-item-btn" data-target="profileView">
+                <button type="button" class="nav-item-btn" data-target="profileView">
                     <ion-icon name="person-outline" class="nav-icon"></ion-icon>
                     My Profile
                 </button>
-                <button class="nav-item-btn" onclick="window.location.href='mock-interview.html'">
-                    <ion-icon name="hardware-chip-outline" class="nav-icon"></ion-icon>
-                    <span
-                        style="background: linear-gradient(90deg, #A8EDEA 0%, #FED6E3 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;">AI
-                        Mock Interview</span>
+                <button type="button" class="nav-item-btn" onclick="window.location.href='mock-interview.html'">
+                    <ion-icon name="sparkles" class="nav-icon" style="color: #ff00ea;"></ion-icon>
+                    <span style="color: var(--accent-color); font-weight: 800; letter-spacing: 0.5px;">Hiro AI Assistant</span>
                 </button>
             </nav>
 
@@ -89,19 +130,33 @@
                     <p>Welcome back! Here's what's happening today.</p>
                 </div>
 
-                <div class="grid-3">
-                    <div class="card stat-card">
-                        <div class="stat-value" id="statApplications">0</div>
-                        <div class="stat-label">Applications Sent</div>
+                <div class="grid-3 animate-stagger">
+                    <div class="stat-card-premium fade-up">
+                        <div class="stat-icon-wrapper">
+                            <ion-icon name="send-outline"></ion-icon>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statApplications">0</div>
+                            <div class="stat-label">Applications</div>
+                        </div>
                     </div>
-                    <div class="card stat-card"
-                        style="background: linear-gradient(135deg, rgba(224, 195, 252, 0.4) 0%, rgba(142, 197, 252, 0.4) 100%);">
-                        <div class="stat-value" id="statInterviews">0</div>
-                        <div class="stat-label">Interview Invites</div>
+                    <div class="stat-card-premium fade-up" style="animation-delay: 0.1s;">
+                        <div class="stat-icon-wrapper" style="color: #ff9500; background: rgba(255, 149, 0, 0.1);">
+                            <ion-icon name="calendar-outline"></ion-icon>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statInterviews">0</div>
+                            <div class="stat-label">Interviews</div>
+                        </div>
                     </div>
-                    <div class="card stat-card">
-                        <div class="stat-value" id="statMatches">24</div>
-                        <div class="stat-label">AI Job Matches</div>
+                    <div class="stat-card-premium fade-up" style="animation-delay: 0.2s; background: linear-gradient(135deg, rgba(0, 122, 255, 0.1) 0%, rgba(255, 255, 255, 0.4) 100%);">
+                        <div class="stat-icon-wrapper" style="color: var(--accent-color); background: white;">
+                            <ion-icon name="sparkles"></ion-icon>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statMatches">0</div>
+                            <div class="stat-label">AI Matches</div>
+                        </div>
                     </div>
                 </div>
 
@@ -185,11 +240,15 @@
             <!-- FIND JOBS VIEW -->
             <section id="jobsView" class="dashboard-view">
                 <div class="view-header">
-                    <h2>Explore Opportunities</h2>
-                    <div class="search-bar" style="display: flex; gap: 10px; width: 50%;">
-                        <input type="text" id="jobSearchInput" class="form-control"
+                    <div>
+                        <h2>Explore Opportunities</h2>
+                        <p style="color: var(--secondary-text)">Browse curated roles matched to your professional profile.</p>
+                    </div>
+                    <div class="search-wrapper-premium" style="width: 400px;">
+                        <ion-icon name="search-outline"></ion-icon>
+                        <input type="text" id="jobSearchInput" class="search-control-premium"
                             placeholder="Search by role, company...">
-                        <button class="btn btn-primary" onclick="searchJobs()">Search</button>
+                        <button type="button" class="btn btn-accent" style="position: absolute; right: 8px; top: 8px; height: calc(100% - 16px); padding: 0 15px; border-radius: 12px;" onclick="searchJobs()">Find</button>
                     </div>
                 </div>
 
@@ -228,6 +287,74 @@
         </main>
     </div>
 
+    <div id="jobDetailModal" class="modal-overlay">
+        <div class="job-modal-expanded fade-up">
+            <div class="modal-hero">
+                <button type="button" class="modal-close" onclick="closeJobModal()">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+                <div class="job-main-info">
+                    <div class="company-logo-large">
+                        <ion-icon name="briefcase"></ion-icon>
+                    </div>
+                    <div>
+                        <h2 id="modalJobTitle" style="margin: 0 0 8px; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em;">Job Title</h2>
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <span id="modalJobCompany" style="color: var(--accent-color); font-weight: 700; font-size: 1.1rem;">Company</span>
+                            <span style="width: 4px; height: 4px; border-radius: 50%; background: var(--secondary-text)"></span>
+                            <span id="modalJobLocation" style="color: var(--secondary-text); font-weight: 500;">Location</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="job-meta-grid" style="margin: 40px 0 0; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.02)">
+                    <div class="meta-item">
+                        <ion-icon name="time-outline"></ion-icon>
+                        <span id="modalJobType">Type</span>
+                    </div>
+                    <div class="meta-item">
+                        <ion-icon name="cash-outline"></ion-icon>
+                        <span id="modalJobSalary">Salary</span>
+                    </div>
+                    <div class="meta-item">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        <span id="modalJobDate">Posted recently</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body-scroll">
+                <div class="job-content-area">
+                    <div class="job-section">
+                        <h3><ion-icon name="rocket-outline"></ion-icon> About the Role</h3>
+                        <div id="modalJobDescription" class="job-description-text"></div>
+                    </div>
+                    
+                    <div class="grid-2 mt-4">
+                        <div class="job-section">
+                            <h3><ion-icon name="list-outline"></ion-icon> Responsibilities</h3>
+                            <div id="modalJobResponsibilities" class="job-description-text"></div>
+                        </div>
+                        <div class="job-section">
+                            <h3><ion-icon name="checkmark-circle-outline"></ion-icon> Requirements</h3>
+                            <div id="modalJobRequirements" class="job-description-text"></div>
+                        </div>
+                    </div>
+
+                    <div class="job-section mt-4">
+                        <h3><ion-icon name="school-outline"></ion-icon> Qualifications</h3>
+                        <div id="modalJobQualifications" class="job-description-text"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-premium">
+                <button type="button" class="btn btn-outline" onclick="closeJobModal()">Cancel</button>
+                <button type="button" id="modalApplyBtn" class="btn btn-accent btn-large" style="min-width: 180px;">Apply Now</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/api.js"></script>
     <script>
         // Check Authentication
@@ -247,7 +374,10 @@
             const views = document.querySelectorAll('.dashboard-view');
 
             navBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    // Prevent any potential form submission/reload if browser treats it as a button
+                    e.preventDefault();
+
                     // Remove active from all
                     navBtns.forEach(b => b.classList.remove('active'));
                     views.forEach(v => v.classList.remove('active'));
@@ -255,21 +385,26 @@
                     // Add active to clicked
                     btn.classList.add('active');
                     const targetId = btn.getAttribute('data-target');
-                    document.getElementById(targetId).classList.add('active');
+                    if (targetId) {
+                        document.getElementById(targetId).classList.add('active');
 
-                    // Trigger data fetch based on view
-                    if (targetId === 'jobsView') loadAllJobs();
-                    if (targetId === 'applicationsView') loadMyApplications();
-                    if (targetId === 'profileView') loadProfile();
-                    if (targetId === 'overviewView') loadOverview();
+                        // Trigger data fetch based on view
+                        if (targetId === 'jobsView') loadAllJobs();
+                        if (targetId === 'applicationsView') loadMyApplications();
+                        if (targetId === 'profileView') loadProfile();
+                        if (targetId === 'overviewView') loadOverview();
+                    }
                 });
             });
 
             // Initial Load
+            loadProfile();
             loadOverview();
         });
 
         // API Logic
+        let userHasResume = false;
+
         async function loadProfile() {
             try {
                 const profile = await getProfile(user.id);
@@ -277,7 +412,9 @@
                     document.getElementById('profileHeadline').value = profile.headline || '';
                     document.getElementById('profileLocation').value = profile.location || '';
                     document.getElementById('profileGithub').value = profile.githubLink || '';
-                    document.getElementById('profileSkills').value = profile.extractedSkills || '';
+                    document.getElementById('profileSkills').value = profile.skills || '';
+                    
+                    userHasResume = !!profile.resumeFilePath;
                 }
             } catch (e) { console.error('Error loading profile', e); }
         }
@@ -295,6 +432,7 @@
                     container.innerHTML = '';
                     recommendations.slice(0, 4).forEach(item => {
                         const job = item.job;
+                        const score = item.score ? (item.score * 100).toFixed(0) : '0';
                         container.innerHTML += `
                             <div class="card" style="background: rgba(255,255,255,0.7); border: 1px solid var(--accent-color); box-shadow: 0 8px 32px rgba(0,113,227,0.1);">
                                 <div style="display:flex; justify-content:space-between; align-items: flex-start; margin-bottom: 12px;">
@@ -302,10 +440,11 @@
                                         <h4 style="margin: 0; font-size: 1.1rem;">${job.title}</h4>
                                         <p style="font-size: 0.85rem; color: var(--secondary-text); margin-top: 4px;">${job.company} • ${job.location}</p>
                                     </div>
-                                    <span class="match-score">${(item.score * 100).toFixed(0)}% Match</span>
+                                    <span class="match-score" style="background: var(--accent-gradient); color: white; padding: 6px 14px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">${score}% Match</span>
                                 </div>
                                 <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
-                                    <button class="btn btn-accent btn-small" style="flex: 1;" onclick="applyToJob(${job.id})">Fast Apply</button>
+                                    <button type="button" class="btn btn-outline btn-small" style="flex: 1;" onclick="event.preventDefault(); viewJobDetails(${job.id})">Details</button>
+                                    <button type="button" class="btn btn-accent btn-small" style="flex: 1;" onclick="event.preventDefault(); applyToJob(${job.id})">Fast Apply</button>
                                 </div>
                             </div>
                         `;
@@ -349,35 +488,84 @@
             container.innerHTML = '';
             jobs.forEach(job => {
                 container.innerHTML += `
-                    <div class="card">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <div>
-                                <h3 style="margin-bottom: 5px; color: #1d1d1f;">${job.title}</h3>
-                                <p style="color: var(--accent-color); font-weight: 500; font-size: 0.9rem;">${job.company}</p>
+                    <div class="job-card-premium fade-up">
+                        <span class="job-type-pill">${job.jobType.replace('_', ' ')}</span>
+                        <div style="margin-bottom: 24px;">
+                            <h3 style="font-size: 1.4rem; margin-bottom: 6px; font-weight: 800; letter-spacing: -0.02em;">${job.title}</h3>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <span style="color: var(--accent-color); font-weight: 700;">${job.company}</span>
+                                <span style="color: #888;">•</span>
+                                <span style="color: var(--secondary-text); font-weight: 500;">${job.location}</span>
                             </div>
-                            <span class="hero-pill glass" style="font-size: 0.75rem; padding: 4px 10px;">${job.jobType}</span>
                         </div>
-                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-                            <span style="font-size: 0.85rem; color: #666;"><ion-icon name="location-outline"></ion-icon> ${job.location}</span>
-                            <span style="font-size: 0.85rem; color: #666;"><ion-icon name="cash-outline"></ion-icon> ${job.salary || 'Not specified'}</span>
-                        </div>
-                        <p style="margin-top: 15px; font-size: 0.9rem; color: #555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                        
+                        <p style="color: var(--secondary-text); font-size: 0.95rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 24px;">
                             ${job.description}
                         </p>
-                        <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.05); margin: 15px 0;">
-                        <button class="btn btn-primary w-100" onclick="applyToJob(${job.id})">Apply Now</button>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.03); padding-top: 24px;">
+                            <div style="display:flex; align-items:center; gap:6px; color: var(--secondary-text); font-weight: 600;">
+                                <ion-icon name="cash-outline"></ion-icon>
+                                <span>${job.salary || 'Competitive'}</span>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="button" class="btn btn-outline btn-small" onclick="event.preventDefault(); viewJobDetails(${job.id})">Details</button>
+                                <button type="button" class="btn btn-accent btn-small" onclick="event.preventDefault(); applyToJob(${job.id})">Apply</button>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
         }
 
+        async function viewJobDetails(jobId) {
+            if (event) event.preventDefault();
+            try {
+                const job = await getJobById(jobId);
+                document.getElementById('modalJobTitle').textContent = job.title;
+                document.getElementById('modalJobCompany').textContent = job.company;
+                document.getElementById('modalJobLocation').textContent = job.location;
+                document.getElementById('modalJobType').textContent = job.jobType.replace('_', ' ');
+                document.getElementById('modalJobSalary').textContent = job.salary || 'Not specified';
+                document.getElementById('modalJobDate').textContent = `Posted: ${new Date(job.postedDate).toLocaleDateString()}`;
+                
+                // Detailed sections
+                document.getElementById('modalJobDescription').innerHTML = job.description ? job.description.replace(/\n/g, '<br>') : '---';
+                document.getElementById('modalJobResponsibilities').innerHTML = job.responsibilities ? job.responsibilities.replace(/\n/g, '<br>') : 'Details not provided.';
+                document.getElementById('modalJobRequirements').innerHTML = job.requirements ? job.requirements.replace(/\n/g, '<br>') : 'Standard IT requirements apply.';
+                document.getElementById('modalJobQualifications').innerHTML = job.qualifications ? job.qualifications.replace(/\n/g, '<br>') : 'BCA, MCA, or relevant degree.';
+                
+                const applyBtn = document.getElementById('modalApplyBtn');
+                applyBtn.onclick = () => {
+                    closeJobModal();
+                    applyToJob(job.id);
+                };
+
+                document.getElementById('jobDetailModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } catch (e) {
+                alert("Failed to load job details.");
+            }
+        }
+
+        function closeJobModal() {
+            document.getElementById('jobDetailModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
         async function applyToJob(jobId) {
+            if (!userHasResume) {
+                alert("Resume Required: Please upload your resume in the 'My Profile' section before applying for jobs.");
+                // Switch to profile view
+                document.querySelector('[data-target="profileView"]').click();
+                return;
+            }
             try {
                 await applyForJob(jobId, user.id);
                 alert("Successfully applied for the job!");
                 loadMyApplications();
             } catch (e) {
-                alert("Failed to apply. You might have already applied.");
+                alert("Application Error: " + (e.message || "You might have already applied or your resume is not uploaded yet. Check your profile!"));
             }
         }
 
@@ -461,9 +649,11 @@
 
                 status.textContent = 'Parsed successfully!';
                 status.style.color = 'green';
+                userHasResume = true;
 
-                // Reload profile to show extracted skills
+                // Reload profile and recommendations
                 await loadProfile();
+                await loadOverview();
 
             } catch (error) {
                 status.textContent = 'Error: Make sure Python AI Service is running.';
