@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clearance Check - Hirotix Command</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="../js/theme.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        .admin-login-wrapper {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--admin-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover;
+            opacity: 0.05;
+            filter: grayscale(100%);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--admin-card);
+            backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--admin-border);
+            border-radius: 32px;
+            padding: 50px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+            animation: cardEntrance 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .login-header p {
+            color: var(--admin-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .system-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--admin-accent);
+            padding: 6px 16px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+        }
+
+        .form-info {
+            background: rgba(255, 214, 10, 0.05);
+            border: 1px solid rgba(255, 214, 10, 0.1);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-info ion-icon {
+            color: var(--admin-warning);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .form-info p {
+            font-size: 0.85rem;
+            color: var(--admin-text-secondary);
+            line-height: 1.4;
+        }
+
+        .admin-input-group {
+            margin-bottom: 24px;
+        }
+
+        .admin-input-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--admin-text-secondary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-ctx {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-ctx ion-icon {
+            position: absolute;
+            left: 20px;
+            color: var(--admin-text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .admin-control {
+            width: 100%;
+            background: rgba(128, 128, 128, 0.05);
+            border: 1px solid var(--admin-border);
+            padding: 18px 20px 18px 54px;
+            border-radius: 16px;
+            color: var(--admin-text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-control:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 0 20px rgba(0, 122, 255, 0.1);
+        }
+
+        .btn-authorize {
+            width: 100%;
+            background: var(--admin-accent-gradient);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 122, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-authorize:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0, 122, 255, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn-authorize:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-banner {
+            background: rgba(255, 69, 58, 0.1);
+            border: 1px solid rgba(255, 69, 58, 0.2);
+            color: var(--admin-danger);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .loader-ring {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: ringSpin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes ringSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .footer-links a {
+            color: var(--admin-text-secondary);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body class="admin-mode">
+    <div class="admin-login-wrapper">
+        <div class="auth-overlay"></div>
+        
+        <div class="login-card">
+            <div class="login-header">
+                <div class="system-badge">
+                    <ion-icon name="shield-checkmark"></ion-icon> Restricted Access
+                </div>
+                <h2>Hirotix Core</h2>
+                <p>Authorized personnel only</p>
+            </div>
+
+            <div id="errorBanner" class="error-banner"></div>
+
+            <div class="form-info">
+                <ion-icon name="information-circle"></ion-icon>
+                <p>This is a encrypted management portal. All unauthorized login attempts are logged and monitored.</p>
+            </div>
+
+            <form id="adminLoginForm">
+                <div class="admin-input-group">
+                    <label>Identity (Email)</label>
+                    <div class="input-ctx">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <input type="email" id="email" class="admin-control" value="admin@hirotix.com" placeholder="admin@hirotix.com" required>
+                    </div>
+                </div>
+
+                <div class="admin-input-group">
+                    <label>Access Key</label>
+                    <div class="input-ctx">
+                        <ion-icon name="key-outline"></ion-icon>
+                        <input type="password" id="password" class="admin-control" placeholder="••••••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-authorize" id="loginBtn">
+                    <span id="btnText">Initiate Session</span>
+                    <div class="loader-ring" id="btnLoader"></div>
+                </button>
+            </form>
+
+            <div class="footer-links">
+                <a href="../index.html">&larr; Return to Public Site</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorBanner = document.getElementById('errorBanner');
+            const btn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+
+            try {
+                errorBanner.style.display = 'none';
+                btn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'block';
+
+                const response = await login(email, password);
+                
+                if(response.role !== 'ADMIN') {
+                    throw new Error('Access Denied: Insufficient Clearance Level.');
+                }
+
+                btnText.textContent = 'Session Authorized...';
+                btnText.style.display = 'block';
+                btnLoader.style.display = 'none';
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 800);
+
+            } catch (err) {
+                errorBanner.textContent = err.message || 'Identity verification failed.';
+                errorBanner.style.display = 'block';
+                btn.disabled = false;
+                btnText.style.display = 'block';
+                btnLoader.style.display = 'none';
+            }
+        });
+
+        // Check if already logged in as admin
+        window.addEventListener('DOMContentLoaded', () => {
+            const user = getCurrentUser();
+            if(user && user.role === 'ADMIN') {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
