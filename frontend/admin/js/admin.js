@@ -1,238 +1,196 @@
 /**
- * admin.js - Hirotix Admin Suite Core Logic
+ * admin.js - Enterprise Suite Logic
  */
 
-let allUsers = [];
-let allJobs = [];
-
-/**
- * Global Dashboard Overview
- */
-async function loadDashboardStats() {
-    const stats = await getAdminStats();
-    if (stats) {
-        safeUpdate('stat-total-users', stats.totalUsers);
-        safeUpdate('stat-seeker-recruiter', `${stats.totalSeekers} / ${stats.totalRecruiters}`);
-        safeUpdate('stat-total-jobs', stats.totalJobs);
-    }
-    
-    // Simulate latency for the UI effect
-    safeUpdate('stat-latency', Math.floor(Math.random() * (45 - 15) + 15));
-
-    await renderOnboardingTable();
-}
-
-async function renderOnboardingTable() {
-    const table = document.getElementById('onboarding-table');
-    if (!table) return;
-
-    const recentUsers = await getAdminOnboarding();
-    
-    if (recentUsers.length === 0) {
-        table.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">No identities found.</td></tr>';
+document.addEventListener('DOMContentLoaded', () => {
+    // Basic Admin Auth Check
+    const user = JSON.parse(localStorage.getItem('hirotix_user'));
+    if (!user || user.role !== 'ADMIN') {
+        window.location.href = 'login.html';
         return;
     }
 
-    table.innerHTML = recentUsers.map(user => `
+    if (document.getElementById('adminName')) {
+        document.getElementById('adminName').textContent = user.fullName;
+    }
+
+    // Identify current page and load relevant data
+    const path = window.location.pathname;
+    if (path.includes('index.html') || path.endsWith('/admin/')) {
+        loadDashboardStats();
+    } else if (path.includes('users.html')) {
+        loadUsersList();
+    } else if (path.includes('jobs.html')) {
+        loadJobsList();
+    } else if (path.includes('applications.html')) {
+        loadApplicationsList();
+    }
+
+    // Logout logic
+    const logoutBtn = document.getElementById('adminLogout');
+    if (logoutBtn) {
+        logoutBtn.onclick = (e) => {
+            e.preventDefault();
+            localStorage.removeItem('hirotix_user');
+            window.location.href = '../login.html';
+        };
+    }
+});
+
+// ---------- DASHBOARD LOGIC ---------- //
+
+async function loadDashboardStats() {
+    try {
+        const stats = await getAdminStats();
+        if (stats) {
+            document.getElementById('totalUsers').textContent = stats.totalUsers;
+            document.getElementById('totalJobs').textContent = stats.totalJobs;
+            document.getElementById('totalApps').textContent = stats.totalApplications;
+            document.getElementById('growthRate').textContent = stats.growthRate + '%';
+        }
+
+        const onboarding = await getAdminOnboarding();
+        const usersTable = document.getElementById('recentUsersTable');
+        if (usersTable && onboarding) {
+            usersTable.innerHTML = onboarding.slice(0, 5).map(u => `
+                <tr>
+                    <td>
+                        <div class="table-user-info">
+                            <span class="user-name">${u.fullName}</span>
+                            <span class="user-email">${u.email}</span>
+                        </div>
+                    </td>
+                    <td><span class="badge ${u.role.toLowerCase()}">${u.role}</span></td>
+                    <td><span class="status-dot online"></span> Active</td>
+                    <td>Recently</td>
+                </tr>
+            `).join('');
+        }
+    } catch (err) { console.error("Admin Stats Error:", err); }
+}
+
+// ---------- USER MANAGEMENT ---------- //
+
+let currentUsers = [];
+
+async function loadUsersList() {
+    const table = document.getElementById('usersListTable');
+    try {
+        currentUsers = await getAllUsers();
+        renderUsers(currentUsers);
+
+        document.getElementById('userSearch').oninput = (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = currentUsers.filter(u => 
+                u.fullName.toLowerCase().includes(query) || 
+                u.email.toLowerCase().includes(query)
+            );
+            renderUsers(filtered);
+        };
+    } catch (err) { table.innerHTML = '<tr><td colspan="5">Error loading users</td></tr>'; }
+}
+
+function renderUsers(users) {
+    const table = document.getElementById('usersListTable');
+    table.innerHTML = users.map(u => `
         <tr>
+            <td>#${u.id}</td>
+            <td><strong>${u.fullName}</strong></td>
+            <td>${u.email}</td>
+            <td><span class="badge ${u.role.toLowerCase()}">${u.role}</span></td>
             <td>
-                <div class="user-identity">
-                    <div class="user-avatar">${user.fullName.charAt(0)}</div>
-                    <div>
-                        <div style="font-weight: 700;">${user.fullName}</div>
-                        <div style="font-size: 0.75rem; color: var(--admin-text-secondary);">${user.email}</div>
-                    </div>
+                <div class="table-actions">
+                    <button class="btn-icon edit" onclick="openEditModal(${u.id}, '${u.email}', '${u.role}')" title="Edit Role"><ion-icon name="create-outline"></ion-icon></button>
+                    <button class="btn-icon delete" onclick="deleteUserPrompt(${u.id})" title="Delete User"><ion-icon name="trash-outline"></ion-icon></button>
                 </div>
-            </td>
-            <td>Newly Registered</td>
-            <td><span class="role-badge ${user.role?.toLowerCase().includes('seeker') ? 'role-seeker' : 'role-recruiter'}">${user.role}</span></td>
-            <td style="text-align: right;">
-                <button class="action-btn" title="View Permission" onclick="alert('User level: ${user.role}')"><ion-icon name="shield-outline"></ion-icon></button>
             </td>
         </tr>
     `).join('');
 }
 
-/**
- * User Management View
- */
-async function loadAllUsersView() {
-    allUsers = await getAllUsers();
-    renderUsersList(allUsers);
-}
-
-function renderUsersList(users) {
-    const table = document.getElementById('users-table-body');
-    if (!table) return;
-
-    if (users.length === 0) {
-        table.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px;">No users found matching search.</td></tr>';
-        return;
-    }
-
-    table.innerHTML = users.map(user => {
-        const initials = user.fullName ? user.fullName.charAt(0).toUpperCase() : '?';
-        const roleClass = user.role === 'SEEKER' ? 'role-seeker' : 'role-recruiter';
-        
-        return `
-        <tr class="fade-up">
-            <td>
-                <div class="user-identity">
-                    <div class="user-avatar" style="background: ${getRoleColor(user.role)}">${initials}</div>
-                    <div style="font-weight: 700;">${user.fullName || 'Anonymous Identity'}</div>
-                </div>
-            </td>
-            <td>${user.email}</td>
-            <td><span class="role-badge ${roleClass}">${user.role}</span></td>
-            <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'System Managed'}</td>
-            <td style="text-align: right;">
-                <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                    ${user.role === 'SEEKER' ? `
-                    <a href="${getResumeViewUrl(user.id)}" target="_blank" class="action-btn" title="View Resume" style="color: var(--accent-color); display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                        <ion-icon name="document-outline"></ion-icon>
-                    </a>
-                    ` : ''}
-                    <button class="action-btn edit" onclick="openEditUserModal(${user.id}, '${user.fullName}', '${user.email}', '${user.role}')" title="Modify Clearance">
-                        <ion-icon name="create-outline"></ion-icon>
-                    </button>
-                    <button class="action-btn delete" onclick="confirmDeleteUser(${user.id}, '${user.fullName}')" title="Purge Identity">
-                        <ion-icon name="trash-outline"></ion-icon>
-                    </button>
-                </div>
-            </td>
-        </tr>
-        `;
-    }).join('');
-}
-
-function getRoleColor(role) {
-    if (role === 'ADMIN') return 'var(--admin-accent-gradient)';
-    if (role === 'RECRUITER') return 'linear-gradient(135deg, #FF9F0A 0%, #FF375F 100%)';
-    return 'linear-gradient(135deg, #32D74B 0%, #007AFF 100%)';
-}
-
-/**
- * Edit User Logic
- */
-let currentEditingUserId = null;
-
-function openEditUserModal(id, name, email, role) {
-    currentEditingUserId = id;
-    document.getElementById('editUserName').value = name;
-    document.getElementById('editUserEmail').value = email;
+let editingUserId = null;
+function openEditModal(id, email, role) {
+    editingUserId = id;
+    document.getElementById('editUserEmail').textContent = `Updating: ${email}`;
     document.getElementById('editUserRole').value = role;
     document.getElementById('editUserModal').classList.add('active');
 }
 
-function closeEditUserModal() {
+function closeEditModal() {
     document.getElementById('editUserModal').classList.remove('active');
-    currentEditingUserId = null;
 }
 
-async function handleUpdateUser(e) {
-    if (e) e.preventDefault();
-    
-    const updateData = {
-        fullName: document.getElementById('editUserName').value,
-        email: document.getElementById('editUserEmail').value,
-        role: document.getElementById('editUserRole').value
-    };
-
-    try {
-        const btn = document.getElementById('saveUserBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<div class="loader-ring" style="display:block; width:16px; height:16px;"></div>Saving...';
-
-        await updateUser(currentEditingUserId, updateData);
-        
-        closeEditUserModal();
-        alert("Identity updated successfully across all sectors.");
-        loadAllUsersView(); // Refresh list
-    } catch (err) {
-        alert("Sector update failed: " + err.message);
-    } finally {
-        const btn = document.getElementById('saveUserBtn');
-        btn.disabled = false;
-        btn.innerHTML = 'Commit Changes';
-    }
-}
-
-async function confirmDeleteUser(id, name) {
-    if (confirm(`CRITICAL: Are you sure you want to permanently remove "${name}" and all associated data? This action is irreversible.`)) {
+async function deleteUserPrompt(id) {
+    if (confirm("Are you sure you want to delete this user? This cannot be undone.")) {
         try {
             await deleteUser(id);
-            alert("Identity purged successfully.");
-            loadAllUsersView(); // Reload
-        } catch (err) {
-            alert("Error purging identity: " + err.message);
-        }
+            loadUsersList();
+        } catch (err) { alert("Failed to delete user."); }
     }
 }
 
-function filterUsers() {
-    const query = document.getElementById('userSearch').value.toLowerCase();
-    const filtered = allUsers.filter(u => 
-        u.fullName.toLowerCase().includes(query) || 
-        u.email.toLowerCase().includes(query)
-    );
-    renderUsersList(filtered);
+document.getElementById('saveUserRole')?.addEventListener('click', async () => {
+    const newRole = document.getElementById('editUserRole').value;
+    try {
+        const userToUpdate = currentUsers.find(u => u.id === editingUserId);
+        await updateUser(editingUserId, { ...userToUpdate, role: newRole });
+        closeEditModal();
+        loadUsersList();
+    } catch (err) { alert("Failed to update role"); }
+});
+
+// ---------- JOB MANAGEMENT ---------- //
+
+async function loadJobsList() {
+    const table = document.getElementById('jobsListTable');
+    try {
+        const jobs = await getAllActiveJobs();
+        table.innerHTML = jobs.map(j => `
+            <tr>
+                <td><strong>${j.title}</strong></td>
+                <td>${j.company}</td>
+                <td>${j.location}</td>
+                <td><span class="badge job">${j.jobType}</span></td>
+                <td>
+                    <button class="btn-icon delete" onclick="deleteJobPrompt(${j.id})"><ion-icon name="trash-outline"></ion-icon></button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) { table.innerHTML = '<tr><td colspan="5">Error loading jobs</td></tr>'; }
 }
 
-/**
- * Job Oversight View
- */
-async function loadAllJobsView() {
-    allJobs = await getAllActiveJobs();
-    const table = document.getElementById('jobs-table-body');
-    if (!table) return;
-
-    if (allJobs.length === 0) {
-        table.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px;">No active job postings.</td></tr>';
-        return;
-    }
-
-    table.innerHTML = allJobs.map(job => `
-        <tr class="fade-up">
-            <td>
-                <div style="font-weight: 700; font-size: 1.1rem;">${job.title}</div>
-                <div style="font-size: 0.8rem; color: var(--admin-text-secondary); margin-top: 3px;">Type: ${job.jobType || 'Standard'} • Status: Active</div>
-            </td>
-            <td>
-                <div style="font-weight: 600;">${job.company}</div>
-                <div style="font-size: 0.75rem; color: var(--admin-text-secondary);">Managed by: ${job.recruiter ? job.recruiter.fullName : 'Identity Purged'}</div>
-            </td>
-            <td><ion-icon name="location-outline" style="vertical-align: middle;"></ion-icon> ${job.location}</td>
-            <td style="text-align: center;">---</td>
-            <td style="text-align: right;">
-                <button class="action-btn delete" onclick="confirmDeleteJob(${job.id})" title="Remove Post">
-                    <ion-icon name="close-circle-outline" style="font-size: 1.2rem;"></ion-icon>
-                </button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-async function confirmDeleteJob(id) {
-    if (confirm("Remove this job posting from the public board?")) {
+async function deleteJobPrompt(id) {
+    if (confirm("Delete this job posting?")) {
         try {
             await deleteJob(id);
-            alert("Posting removed.");
-            loadAllJobsView();
-        } catch (err) {
-            alert("Action failed.");
-        }
+            loadJobsList();
+        } catch (err) { alert("Error deleting job"); }
     }
 }
 
-/**
- * Utils
- */
-function safeUpdate(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = val;
+// ---------- APPLICATIONS TRACKING ---------- //
+
+async function loadApplicationsList() {
+    const table = document.getElementById('applicationsListTable');
+    try {
+        const apps = await getAdminApplications();
+        table.innerHTML = apps.map(a => `
+            <tr>
+                <td><strong>${a.user.fullName}</strong></td>
+                <td>${a.job.title}</td>
+                <td>${a.job.company}</td>
+                <td><span class="badge ${a.status.toLowerCase()}">${a.status}</span></td>
+                <td>
+                    <button class="btn-premium btn-small" onclick="viewResume(${a.user.id})">
+                        <ion-icon name="document-outline"></ion-icon> View Resume
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) { table.innerHTML = '<tr><td colspan="5">Error loading applications</td></tr>'; }
 }
 
-// Auto-init dashboard if on index
-if (document.getElementById('stat-total-users')) {
-    loadDashboardStats();
+function viewResume(userId) {
+    const url = getResumeViewUrl(userId);
+    window.open(url, '_blank');
 }
