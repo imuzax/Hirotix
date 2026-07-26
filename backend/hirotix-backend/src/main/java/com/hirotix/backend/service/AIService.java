@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.util.Collections;
@@ -23,7 +24,9 @@ import java.util.stream.Collectors;
 public class AIService {
 
     private final JobRepository jobRepository;
-    private final String PYTHON_SERVICE_URL = "http://127.0.0.1:5000";
+    
+    @Value("${ai.service.url:http://127.0.0.1:5000}")
+    private String PYTHON_SERVICE_URL;
     
     private RestTemplate getRestTemplate() {
         org.springframework.http.client.SimpleClientHttpRequestFactory factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();

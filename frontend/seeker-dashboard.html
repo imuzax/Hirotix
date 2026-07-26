@@ -437,14 +437,14 @@
                             <div class="card" style="background: rgba(255,255,255,0.7); border: 1px solid var(--accent-color); box-shadow: 0 8px 32px rgba(0,113,227,0.1);">
                                 <div style="display:flex; justify-content:space-between; align-items: flex-start; margin-bottom: 12px;">
                                     <div>
-                                        <h4 style="margin: 0; font-size: 1.1rem;">\${job.title}</h4>
-                                        <p style="font-size: 0.85rem; color: var(--secondary-text); margin-top: 4px;">\${job.company} • \${job.location}</p>
+                                        <h4 style="margin: 0; font-size: 1.1rem;">${job.title}</h4>
+                                        <p style="font-size: 0.85rem; color: var(--secondary-text); margin-top: 4px;">${job.company} • ${job.location}</p>
                                     </div>
-                                    <span class="match-score" style="background: var(--accent-gradient); color: white; padding: 6px 14px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">\${score}% Match</span>
+                                    <span class="match-score" style="background: var(--accent-gradient); color: white; padding: 6px 14px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">${score}% Match</span>
                                 </div>
                                 <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
-                                    <button type="button" class="btn btn-outline btn-small" style="flex: 1;" onclick="event.preventDefault(); viewJobDetails(\${job.id})">Details</button>
-                                    <button type="button" class="btn btn-accent btn-small" style="flex: 1;" onclick="event.preventDefault(); applyToJob(\${job.id})">Fast Apply</button>
+                                    <button type="button" class="btn btn-outline btn-small" style="flex: 1;" onclick="event.preventDefault(); viewJobDetails(${job.id})">Details</button>
+                                    <button type="button" class="btn btn-accent btn-small" style="flex: 1;" onclick="event.preventDefault(); applyToJob(${job.id})">Fast Apply</button>
                                 </div>
                             </div>
                         `;
@@ -489,28 +489,28 @@
             jobs.forEach(job => {
                 container.innerHTML += `
                     <div class="job-card-premium fade-up">
-                        <span class="job-type-pill">\${job.jobType.replace('_', ' ')}</span>
+                        <span class="job-type-pill">${job.jobType.replace('_', ' ')}</span>
                         <div style="margin-bottom: 24px;">
-                            <h3 style="font-size: 1.4rem; margin-bottom: 6px; font-weight: 800; letter-spacing: -0.02em;">\${job.title}</h3>
+                            <h3 style="font-size: 1.4rem; margin-bottom: 6px; font-weight: 800; letter-spacing: -0.02em;">${job.title}</h3>
                             <div style="display:flex; gap:10px; align-items:center;">
-                                <span style="color: var(--accent-color); font-weight: 700;">\${job.company}</span>
+                                <span style="color: var(--accent-color); font-weight: 700;">${job.company}</span>
                                 <span style="color: #888;">•</span>
-                                <span style="color: var(--secondary-text); font-weight: 500;">\${job.location}</span>
+                                <span style="color: var(--secondary-text); font-weight: 500;">${job.location}</span>
                             </div>
                         </div>
                         
                         <p style="color: var(--secondary-text); font-size: 0.95rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 24px;">
-                            \${job.description}
+                            ${job.description}
                         </p>
 
                         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.03); padding-top: 24px;">
                             <div style="display:flex; align-items:center; gap:6px; color: var(--secondary-text); font-weight: 600;">
                                 <ion-icon name="cash-outline"></ion-icon>
-                                <span>\${job.salary || 'Competitive'}</span>
+                                <span>${job.salary || 'Competitive'}</span>
                             </div>
                             <div style="display: flex; gap: 10px;">
-                                <button type="button" class="btn btn-outline btn-small" onclick="event.preventDefault(); viewJobDetails(\${job.id})">Details</button>
-                                <button type="button" class="btn btn-accent btn-small" onclick="event.preventDefault(); applyToJob(\${job.id})">Apply</button>
+                                <button type="button" class="btn btn-outline btn-small" onclick="event.preventDefault(); viewJobDetails(${job.id})">Details</button>
+                                <button type="button" class="btn btn-accent btn-small" onclick="event.preventDefault(); applyToJob(${job.id})">Apply</button>
                             </div>
                         </div>
                     </div>
@@ -527,7 +527,7 @@
                 document.getElementById('modalJobLocation').textContent = job.location;
                 document.getElementById('modalJobType').textContent = job.jobType.replace('_', ' ');
                 document.getElementById('modalJobSalary').textContent = job.salary || 'Not specified';
-                document.getElementById('modalJobDate').textContent = \`Posted: \${new Date(job.postedDate).toLocaleDateString()}\`;
+                document.getElementById('modalJobDate').textContent = `Posted: ${new Date(job.postedDate).toLocaleDateString()}`;
                 
                 // Detailed sections
                 document.getElementById('modalJobDescription').innerHTML = job.description ? job.description.replace(/\n/g, '<br>') : '---';
@@ -583,12 +583,12 @@
                     let statusColor = app.status === 'PENDING' ? '#f39c12' : (app.status === 'SHORTLISTED' ? '#2ecc71' : '#e74c3c');
                     tbody.innerHTML += `
                         <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-                            <td style="padding: 16px; font-weight: 500;">\${app.job.title}</td>
-                            <td style="padding: 16px; color: #555;">\${app.job.company}</td>
-                            <td style="padding: 16px; color: #888; font-size: 0.9rem;">\${app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'Recently'}</td>
+                            <td style="padding: 16px; font-weight: 500;">${app.job.title}</td>
+                            <td style="padding: 16px; color: #555;">${app.job.company}</td>
+                            <td style="padding: 16px; color: #888; font-size: 0.9rem;">${app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'Recently'}</td>
                             <td style="padding: 16px;">
-                                <span style="background: \${statusColor}22; color: \${statusColor}; padding: 4px 12px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
-                                    \${app.status}
+                                <span style="background: ${statusColor}22; color: ${statusColor}; padding: 4px 12px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
+                                    ${app.status}
                                 </span>
                             </td>
                         </tr>
@@ -611,7 +611,7 @@
                     user: { id: user.id }
                 };
 
-                await fetch(\`\${BASE_URL}/profiles/\${user.id}\`, {
+                await fetch(`${BASE_URL}/profiles/${user.id}`, {
                     method: 'PUT',
                     headers: getHeaders(),
                     body: JSON.stringify(payload)

@@ -23,7 +23,17 @@ public class Job {
     private String location;
 
 
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(columnDefinition = "TEXT")
+    private String responsibilities;
+
+    @Column(columnDefinition = "TEXT")
+    private String requirements;
+
+    @Column(columnDefinition = "TEXT")
+    private String qualifications;
 
     private String salary;
 

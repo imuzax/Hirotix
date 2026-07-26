@@ -52,7 +52,7 @@
             <li><a href="#features" class="nav-item">Features</a></li>
             <li><a href="#how-it-works" class="nav-item">How It Works</a></li>
             <li><a href="#team" class="nav-item">Team</a></li>
-            <li><a href="#contact" class="nav-item">Contact</a></li>
+            <li><a href="contact.html" class="nav-item">Contact</a></li>
         </ul>
 
         <div class="nav-buttons">
@@ -75,41 +75,77 @@
             </div>
 
             <div class="hero-content">
-                <div class="hero-pill">✨ The future of hiring is here</div>
-                <h1>AI-Powered Recruitment for the Future Workforce</h1>
-                <p>Hirotix uses intelligent algorithms to connect talented professionals with the right opportunities
-                    faster and
-                    smarter.</p>
-                <div class="hero-buttons">
-                    <a href="register.html" class="btn btn-accent btn-large">Get Started Free</a>
+                <div class="hero-pill fade-up">✨ The future of hiring is here</div>
+                <h1 class="fade-up" style="animation-delay: 0.1s;">AI-Powered Recruitment for the Future Workforce</h1>
+                <p class="fade-up" style="animation-delay: 0.2s; opacity: 1;">Hirotix uses intelligent algorithms to
+                    connect talented professionals with the right opportunities
+                    faster and smarter.</p>
+                <div class="hero-buttons fade-up" style="animation-delay: 0.3s;">
+                    <a href="register.html" class="btn btn-accent btn-large">Get Started Now</a>
                     <a href="#how-it-works" class="btn btn-outline btn-large">Explore Platform</a>
+                </div>
+            </div>
+
+            <!-- Premium Floating App Preview -->
+            <div class="floating-preview fade-up" style="animation-delay: 0.5s;">
+                <div class="preview-nav">
+                    <div class="nav-dot" style="background: #ff5f57"></div>
+                    <div class="nav-dot" style="background: #ffbd2e"></div>
+                    <div class="nav-dot" style="background: #28c840"></div>
+                </div>
+                <div style="padding: 2px; width: 100%; height: calc(100% - 48px);">
+                    <div
+                        style="background: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                            alt="Platform Preview"
+                            style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8; filter: saturate(1.2);">
+                        <div
+                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                            <div class="glass"
+                                style="padding: 20px 40px; border-radius: 20px; font-weight: 700; color: var(--accent-color); font-size: 1.2rem;">
+                                AI Engine Active</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Mission Section -->
-        <section class="mission-section fade-in-section" id="features">
-            <div class="mission-container">
-                <div class="mission-text">
-                    <div class="section-tag">Our Mission</div>
-                    <h2>Redefining Career Opportunities with Artificial Intelligence</h2>
-                    <p>Hirotix is designed to bridge the gap between talent and opportunity by using intelligent
-                        data-driven
-                        recruitment technology. We believe in a world where everyone has access to the best career paths
-                        tailored to their unique potential.</p>
-                    <ul class="mission-features">
-                        <li><ion-icon name="checkmark-circle-outline"></ion-icon> Precision AI Matching</li>
-                        <li><ion-icon name="analytics-outline"></ion-icon> Real-time Skill Gap Analysis</li>
-                        <li><ion-icon name="flash-outline"></ion-icon> Accelerated Hiring Workflow</li>
-                    </ul>
+        <section class="section fade-in-section" id="features">
+            <div class="section-header">
+                <div class="section-tag">Features</div>
+                <h2>Next-Gen AI Capabilities</h2>
+                <p style="color: var(--secondary-text)">Experience the most advanced recruitment technology ever built.
+                </p>
+            </div>
+
+            <div class="bento-grid">
+                <div class="bento-item large">
+                    <div>
+                        <div class="stat-icon-wrapper" style="margin-bottom: 20px;">
+                            <ion-icon name="sparkles"></ion-icon>
+                        </div>
+                        <h3>Precision AI Matching</h3>
+                        <p style="color: var(--secondary-text); margin-top: 10px;">Our proprietary NLP models analyze
+                            over 5,000 data points to find the perfect synergy between candidate skills and company
+                            culture.</p>
+                    </div>
                 </div>
-                <div class="mission-graphic">
-                    <div class="ai-visual">
-                        <div class="ai-node node-1"><ion-icon name="person-outline"></ion-icon></div>
-                        <div class="ai-node node-2"><ion-icon name="briefcase-outline"></ion-icon></div>
-                        <div class="ai-node node-central"><ion-icon name="diamond-outline"></ion-icon></div>
-                        <div class="ai-connection conn-1"></div>
-                        <div class="ai-connection conn-2"></div>
+                <div class="bento-item">
+                    <div>
+                        <ion-icon name="analytics-outline"
+                            style="font-size: 2rem; color: var(--accent-color); margin-bottom: 20px;"></ion-icon>
+                        <h3>Skill Gap Analysis</h3>
+                        <p style="color: var(--secondary-text); font-size: 0.9rem;">Real-time insights into which skills
+                            are in demand and how you can bridge the gap.</p>
+                    </div>
+                </div>
+                <div class="bento-item">
+                    <div>
+                        <ion-icon name="flash-outline"
+                            style="font-size: 2rem; color: var(--accent-color); margin-bottom: 20px;"></ion-icon>
+                        <h3>Instant Apply</h3>
+                        <p style="color: var(--secondary-text); font-size: 0.9rem;">No more tedious forms. Apply to
+                            world-class roles with a single tap using your AI-synchronized profile.</p>
                     </div>
                 </div>
             </div>
@@ -168,17 +204,84 @@
                 <p style="color: var(--secondary-text)">Driven by innovation and guided by world-class expertise.</p>
             </div>
 
+            <!-- ORIGINAL TEAM SECTION (Commented out for backup)
+            <div class="synergy-pairs-container">
+                // Pair 1: Muzaffar & Mahwish
+                <div class="synergy-pair">
+                    <div class="pair-nodes-wrapper">
+                        <div class="profile-node student-node">
+                            <img src="assets/images/muzaffar.jpeg" alt="Muzaffar Hussain">
+                        </div>
+                        <div class="synergy-bridge"></div>
+                        <div class="profile-node guide-node">
+                            <img src="assets/images/maam.png" alt="Prof. Mahwish Momin" class="maam-img">
+                        </div>
+                    </div>
+                    <div class="pair-info">
+                        <div class="info-block">
+
+                            <h3 class="node-name">Muzaffar Hussain</h3>
+                            <span class="node-role"></span>
+                        </div>
+                        <div class="info-block right-align">
+
+                            <h3 class="node-name">Prof. Mahwish Momin</h3>
+                            <span class="node-role">Guide</span>
+                        </div>
+                    </div>
+                    <p class="pair-bio">Technical leadership by Muzaffar, mentored by Prof. Mahwish Momin for
+                        architectural excellence and AI service integration.</p>
+                    <div class="pair-socials">
+                        <a href="https://linkedin.com/in/imuzax" target="_blank"><ion-icon
+                                name="logo-linkedin"></ion-icon></a>
+                        <a href="https://github.com/imuzax" target="_blank"><ion-icon name="logo-github"></ion-icon></a>
+                    </div>
+                </div>
+
+                // Pair 2: Guftan & Affan
+                <div class="synergy-pair">
+                    <div class="pair-nodes-wrapper">
+                        <div class="profile-node student-node">
+                            <img src="assets/images/Gufran.jpeg" alt="Sayyed Gufran">
+                        </div>
+                        <div class="synergy-bridge"></div>
+                        <div class="profile-node guide-node">
+                            <img src="assets/images/affan.png" alt="Prof. Affan Khan">
+                        </div>
+                    </div>
+                    <div class="pair-info">
+                        <div class="info-block">
+
+                            <h3 class="node-name">Sayyed Gufran</h3>
+                            <span class="node-role"></span>
+                        </div>
+                        <div class="info-block right-align">
+
+                            <h3 class="node-name">Prof. Affan Khan</h3>
+                            <span class="node-role">Guide</span>
+                        </div>
+                    </div>
+                    <p class="pair-bio">System orchestration by Guftan, guided by Prof. Affan Khan to ensure
+                        high-scalability and infrastructure stability.</p>
+                    <div class="pair-socials">
+                        <a href="#"><ion-icon name="logo-linkedin"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-github"></ion-icon></a>
+                    </div>
+                </div>
+            </div>
+            -->
+
             <div class="synergy-pairs-container">
                 <!-- Pair 1: Muzaffar & Mahwish -->
                 <div class="synergy-pair">
                     <div class="pair-nodes-wrapper">
                         <div class="profile-node student-node">
-                            <img src="https://media.licdn.com/dms/image/v2/D4D03AQGjnJp0nqGjUg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1730383941980?e=1775088000&v=beta&t=B4FiIX9pFLGMUVvJkaZKWj1-INHjLpY13x4aTx5g9QQ"
+                            <img src="assets/images/muzaffar.jpeg"
                                 alt="Muzaffar Hussain">
                         </div>
                         <div class="synergy-bridge"></div>
                         <div class="profile-node guide-node">
-                            <img src="https://socmacs.edu.in/assist/bca-staff/Mr.-Affan-Asif-Khan-21.png"
+                            <img src="assets/images/maam.png"
                                 alt="Prof. Mahwish Momin">
                         </div>
                     </div>
@@ -186,12 +289,10 @@
                         <div class="info-block">
                             <span class="node-label">DEV_0x71</span>
                             <h3 class="node-name">Muzaffar Hussain</h3>
-                            <span class="node-role">Lead Full-Stack</span>
                         </div>
                         <div class="info-block right-align">
                             <span class="node-label">EXP_G01</span>
                             <h3 class="node-name">Prof. Mahwish Momin</h3>
-                            <span class="node-role">Academic Guide</span>
                         </div>
                     </div>
                     <p class="pair-bio">Technical leadership by Muzaffar, mentored by Prof. Mahwish Momin for architectural excellence and AI service integration.</p>
@@ -205,12 +306,12 @@
                 <div class="synergy-pair">
                     <div class="pair-nodes-wrapper">
                         <div class="profile-node student-node">
-                            <img src="https://media.licdn.com/dms/image/v2/D5603AQHK4M6YhAQA8Q/profile-displayphoto-crop_800_800/B56Zq_wXHxHkAI-/0/1764153718320?e=1775088000&v=beta&t=CXaDxh1827Vm4LhM42YBHUJl7Uv7O-XcWBdcpvvY6ZI"
+                            <img src="assets/images/Gufran.jpeg"
                                 alt="Sayyed Guftan">
                         </div>
                         <div class="synergy-bridge"></div>
                         <div class="profile-node guide-node">
-                            <img src="https://socmacs.edu.in/assist/bca-staff/Mr.-Affan-Asif-Khan.png"
+                            <img src="assets/images/affan.png"
                                 alt="Prof. Affan Khan">
                         </div>
                     </div>
@@ -218,12 +319,10 @@
                         <div class="info-block">
                             <span class="node-label">DEV_0x71</span>
                             <h3 class="node-name">Sayyed Guftan</h3>
-                            <span class="node-role">Integration Lead</span>
                         </div>
                         <div class="info-block right-align">
                             <span class="node-label">EXP_G02</span>
                             <h3 class="node-name">Prof. Affan Khan</h3>
-                            <span class="node-role">Technical Guide</span>
                         </div>
                     </div>
                     <p class="pair-bio">System orchestration by Guftan, guided by Prof. Affan Khan to ensure high-scalability and infrastructure stability.</p>
@@ -235,15 +334,12 @@
             </div>
         </section>
 
-        <!-- Call to Action -->
-        <section class="cta-section fade-in-section">
-            <div class="bg-shape shape-1"
-                style="width:200px; height:200px; top:-50px; right:-50px; left:auto; background:var(--accent-color)">
-            </div>
-            <h2>Ready to transform your career?</h2>
-            <p style="margin-bottom: 30px;">Join thousands of professionals finding their dream companies through
-                Hirotix.</p>
-            <a href="register.html" class="btn btn-large btn-primary">Get Started Now</a>
+        <section class="cta-premium fade-in-section">
+            <h2 style="font-size: 3.5rem; letter-spacing: -0.04em;">Ready to transform your career?</h2>
+            <p style="margin-bottom: 40px; font-size: 1.3rem;">Join thousands of professionals finding their dream
+                companies through Hirotix.</p>
+            <a href="register.html" class="btn btn-large btn-primary"
+                style="padding: 18px 48px; border-radius: 20px; font-size: 1.2rem;">Get Started Now</a>
         </section>
     </main>
 
@@ -277,28 +373,41 @@
                 <div class="footer-col">
                     <h4>Resources</h4>
                     <ul>
-                        <li><a href="#">AI Resume Guide</a></li>
-                        <li><a href="#">Career Blog</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#" class="modal-trigger" data-modal="resume-guide">AI Resume Guide</a></li>
+                        <li><a href="#" class="modal-trigger" data-modal="career-blog">Career Blog</a></li>
+                        <li><a href="#" class="modal-trigger" data-modal="privacy">Privacy Policy</a></li>
+                        <li><a href="#" class="modal-trigger" data-modal="terms">Terms of Service</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4>Company</h4>
                     <ul>
                         <li><a href="#team">Our Team</a></li>
-                        <li><a href="#contact">Contact Us</a></li>
-                        <li><a href="#">About Project</a></li>
-                        <li><a href="#">Academic Info</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="#" class="modal-trigger" data-modal="about">About Project</a></li>
+                        <li><a href="#" class="modal-trigger" data-modal="academic">Academic Info</a></li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2024 Hirotix Project. All rights reserved. Designed for College Project Submission.</p>
+            <p>&copy; 2026 Hirotix Project. All rights reserved. Designed for College Project Submission.</p>
         </div>
     </footer>
+
+    <!-- Universal Modal -->
+    <div id="universalModal" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3 id="modalTitle">Information</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
 
     <script src="js/script.js"></script>
 </body>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hirotix Premium Presentation</title>
+    <!-- Beautiful modern icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-bg: #f8fafc;
+            --text-dark: #0f172a;
+            --text-gray: #475569;
+            --text-light: #94a3b8;
+            --accent-blue: #2563eb;
+            --accent-purple: #7c3aed;
+            --gradient-main: linear-gradient(135deg, #2563eb, #7c3aed);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 40px 80px -20px rgba(15, 23, 42, 0.08);
+            --card-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);
+            --card-shadow-hover: 0 20px 40px -5px rgba(37, 99, 235, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,0.03) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.03) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.03) 0, transparent 50%);
+            color: var(--text-dark);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Animated Blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            z-index: 0;
+            animation: blobBounce 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .blob-1 {
+            top: -10%; left: -10%;
+            width: 60vw; height: 60vw;
+            background: #dbeafe; /* Very light blue */
+        }
+
+        .blob-2 {
+            bottom: -10%; right: -10%;
+            width: 50vw; height: 50vw;
+            background: #f3e8ff; /* Very light purple */
+            animation-delay: -5s;
+        }
+
+        @keyframes blobBounce {
+            0% { transform: scale(1) translate(0, 0); }
+            33% { transform: scale(1.1) translate(5%, -5%); }
+            66% { transform: scale(0.9) translate(-5%, 5%); }
+            100% { transform: scale(1.05) translate(2%, 2%); }
+        }
+
+        .presentation-container {
+            width: 92vw;
+            height: 88vh;
+            max-width: 1400px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 40px;
+            box-shadow: var(--glass-shadow), inset 0 0 0 1px var(--glass-border);
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 60px 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: scale(0.95) translateY(30px);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+        }
+
+        /* Typography */
+        .slide-header {
+            margin-bottom: 50px;
+            animation: slideUpFade 0.8s ease forwards;
+        }
+
+        .slide-tag {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-blue);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .slide-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+        }
+
+        .gradient-text {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .slide-subtitle {
+            font-size: 1.6rem;
+            color: var(--text-gray);
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 800px;
+        }
+
+        /* Content Layouts */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            height: 100%;
+        }
+
+        .content-text {
+            font-size: 1.4rem;
+            line-height: 1.7;
+            color: var(--text-gray);
+        }
+
+        .hl {
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        /* Cards */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.03);
+            padding: 40px;
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--card-shadow);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .slide.active .card {
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        .slide.active .card:nth-child(1) { animation-delay: 0.1s; }
+        .slide.active .card:nth-child(2) { animation-delay: 0.2s; }
+        .slide.active .card:nth-child(3) { animation-delay: 0.3s; }
+        .slide.active .card:nth-child(4) { animation-delay: 0.4s; }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .card-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            background: #eff6ff;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: var(--accent-blue);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .card p {
+            font-size: 1.15rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* Step List */
+        .step-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            padding: 25px 30px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            opacity: 0;
+        }
+
+        .slide.active .step-item {
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .slide.active .step-item:nth-child(1) { animation-delay: 0.1s; }
+        .slide.active .step-item:nth-child(2) { animation-delay: 0.2s; }
+        .slide.active .step-item:nth-child(3) { animation-delay: 0.3s; }
+        .slide.active .step-item:nth-child(4) { animation-delay: 0.4s; }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-main);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .step-text {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* Huge Icon Display */
+        .hero-graphic {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-circle {
+            width: 400px;
+            height: 400px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .hero-circle::before {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            border-radius: 50%;
+            border: 2px dashed rgba(37, 99, 235, 0.2);
+            animation: rotateSlow 20s linear infinite;
+        }
+
+        @keyframes rotateSlow {
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            right: 60px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            color: var(--text-dark);
+            border: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            color: var(--accent-blue);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.15);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(0,0,0,0.03);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-main);
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        /* Slide Indicator (Dots) */
+        .slide-indicator {
+            position: absolute;
+            bottom: 55px;
+            left: 60px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background: #cbd5e1;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .dot.active {
+            width: 30px;
+            background: var(--accent-blue);
+        }
+
+        .center-all {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="center-all">
+                <div style="background: white; padding: 25px; border-radius: 35px; margin-bottom: 30px; box-shadow: var(--card-shadow);">
+                    <ion-icon name="sparkles" style="font-size: 4.5rem; color: var(--accent-blue); display: block;"></ion-icon>
+                </div>
+                <h1 class="slide-title gradient-text" style="font-size: 7rem; margin-bottom: 0;">Hirotix</h1>
+                <p class="slide-subtitle" style="font-size: 2.2rem; color: var(--text-gray); margin-top: 5px;">AI-Powered Job Portal</p>
+                
+                <div style="margin-top: 80px; text-align: center;">
+                    <span class="slide-tag" style="margin-bottom: 5px;">Presented By</span>
+                    <h3 style="font-size: 1.6rem; color: var(--text-dark); font-weight: 700;">Muzaffar Hussain & Sayyed Guftan</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Introduction -->
+        <div class="slide">
+            <div class="split-layout">
+                <div>
+                    <div class="slide-header" style="text-align: left;">
+                        <span class="slide-tag">Introduction</span>
+                        <h2 class="slide-title">What is Hirotix?</h2>
+                    </div>
+                    <div class="content-text">
+                        <p style="margin-bottom: 25px;">Hirotix is a <span class="hl">Smart Job Website</span>.</p>
+                        <p style="margin-bottom: 25px;">Normally, finding a job or hiring someone is very slow. Companies read resumes manually.</p>
+                        <p>We use <strong>Artificial Intelligence (AI)</strong> to connect students with companies <span class="hl">automatically and quickly</span>.</p>
+                    </div>
+                </div>
+                <div class="hero-graphic">
+                    <div class="hero-circle">
+                        <ion-icon name="planet" style="font-size: 10rem; color: var(--accent-blue);"></ion-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The Problem -->
+        <div class="slide">
+            <div class="slide-header">
+                <span class="slide-tag">The Problem</span>
+                <h2 class="slide-title">The Old Way of Hiring</h2>
+                <p class="slide-subtitle">Why is hiring so difficult today?</p>
+            </div>
+            <div class="grid-cards">
+                <div class="card">
+                    <div class="card-icon-wrapper" style="background: #fef2f2;">
+                        <ion-icon name="sad" class="card-icon" style="color: #ef4444;"></ion-icon>
+                    </div>
+                    <h3>For Students</h3>
+                    <p>It is very hard to find the right job. Good students get rejected just because their resume misses some keywords.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon-wrapper" style="background: #fffbeb;">
+                        <ion-icon name="time" class="card-icon" style="color: #f59e0b;"></ion-icon>
+                    </div>
+                    <h3>For Companies</h3>
+                    <p>HR Managers have to read hundreds of resumes by hand. It takes too much time and they make mistakes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Our Goal -->
+        <div class="slide">
+            <div class="slide-header">
+                <span class="slide-tag">The Objective</span>
+                <h2 class="slide-title">Our Goal</h2>
+                <p class="slide-subtitle">What we want to achieve with Hirotix</p>
+            </div>
+            <div class="grid-cards">
+                <div class="card">
+                    <div class="card-icon-wrapper">
+                        <ion-icon name="flash" class="card-icon"></ion-icon>
+                    </div>
+                    <h3>1. Match Automatically</h3>
+                    <p>Use AI to match the student's skills with the company's job instantly.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon-wrapper" style="background: #ecfdf5;">
+                        <ion-icon name="bulb" class="card-icon" style="color: #10b981;"></ion-icon>
+                    </div>
+                    <h3>2. Help Students Learn</h3>
+                    <p>Tell students what skills they are missing, so they can learn them.</p>
+                </div>
+                <div class="card" style="grid-column: span 2; display: flex; align-items: center; gap: 30px;">
+                    <div class="card-icon-wrapper" style="margin-bottom: 0; background: #f5f3ff;">
+                        <ion-icon name="stopwatch" class="card-icon" style="color: #8b5cf6;"></ion-icon>
+                    </div>
+                    <div>
+                        <h3>3. Save Time</h3>
+                        <p>Make the process super fast. From weeks to just a few minutes!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: The Solution -->
+        <div class="slide">
+            <div class="split-layout">
+                <div class="hero-graphic">
+                    <div class="hero-circle" style="width: 350px; height: 350px;">
+                        <ion-icon name="checkmark-done-circle" style="font-size: 8rem; color: #10b981;"></ion-icon>
+                    </div>
+                </div>
+                <div>
+                    <div class="slide-header" style="text-align: left;">
+                        <span class="slide-tag">The Solution</span>
+                        <h2 class="slide-title">How Hirotix Solves It</h2>
+                    </div>
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <span class="step-text">You just upload your resume once.</span>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <span class="step-text">AI reads it and understands your skills automatically.</span>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <span class="step-text">AI finds the best jobs for you without searching.</span>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <span class="step-text">Companies get a ready list of the best students.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Features -->
+        <div class="slide">
+            <div class="slide-header">
+                <span class="slide-tag">Key Functionality</span>
+                <h2 class="slide-title">Main Features</h2>
+            </div>
+            <div class="grid-cards">
+                <div class="card">
+                    <div class="card-icon-wrapper">
+                        <ion-icon name="hardware-chip" class="card-icon"></ion-icon>
+                    </div>
+                    <h3>AI Matching</h3>
+                    <p>Finds the perfect job using smart AI, not just dumb keywords.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon-wrapper" style="background: #fff1f2;">
+                        <ion-icon name="analytics" class="card-icon" style="color:#f43f5e;"></ion-icon>
+                    </div>
+                    <h3>Skill Checker</h3>
+                    <p>Tells you exactly what you need to learn to get your dream job.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon-wrapper" style="background: #ecfdf5;">
+                        <ion-icon name="rocket" class="card-icon" style="color:#10b981;"></ion-icon>
+                    </div>
+                    <h3>Instant Apply</h3>
+                    <p>No long forms. Apply to any job with just one single click.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon-wrapper" style="background: #f5f3ff;">
+                        <ion-icon name="document-text" class="card-icon" style="color:#8b5cf6;"></ion-icon>
+                    </div>
+                    <h3>Auto Resume Reading</h3>
+                    <p>AI extracts your details automatically. No typing needed.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Tech -->
+        <div class="slide">
+            <div class="slide-header">
+                <span class="slide-tag">Under the hood</span>
+                <h2 class="slide-title">Technologies Used</h2>
+            </div>
+            <div class="grid-cards" style="grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div class="card" style="padding: 30px;">
+                    <div class="card-icon-wrapper" style="background: #fefce8; width: 70px; height: 70px;">
+                        <ion-icon name="desktop" class="card-icon" style="color:#eab308; font-size: 2.5rem;"></ion-icon>
+                    </div>
+                    <h3 style="font-size: 1.8rem;">Frontend</h3>
+                    <p style="font-size: 1.2rem; color: var(--text-dark); font-weight: 600; margin-bottom: 10px;">HTML5, CSS3, JS</p>
+                    <p style="font-size: 1rem;">Provides the beautiful "Glassmorphism" interface.</p>
+                </div>
+                <div class="card" style="padding: 30px;">
+                    <div class="card-icon-wrapper" style="background: #eff6ff; width: 70px; height: 70px;">
+                        <ion-icon name="server" class="card-icon" style="color:#3b82f6; font-size: 2.5rem;"></ion-icon>
+                    </div>
+                    <h3 style="font-size: 1.8rem;">Backend</h3>
+                    <p style="font-size: 1.2rem; color: var(--text-dark); font-weight: 600; margin-bottom: 10px;">Java Spring Boot & MySQL</p>
+                    <p style="font-size: 1rem;">Handles the secure logic, REST APIs, and database.</p>
+                </div>
+                <div class="card" style="padding: 30px;">
+                    <div class="card-icon-wrapper" style="background: #f5f3ff; width: 70px; height: 70px;">
+                        <ion-icon name="hardware-chip" class="card-icon" style="color:#8b5cf6; font-size: 2.5rem;"></ion-icon>
+                    </div>
+                    <h3 style="font-size: 1.8rem;">AI Brain</h3>
+                    <p style="font-size: 1.2rem; color: var(--text-dark); font-weight: 600; margin-bottom: 10px;">Python Flask & Groq API</p>
+                    <p style="font-size: 1rem;">Powers the LLM (Llama-3) for smart resume matching.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Conclusion -->
+        <div class="slide">
+            <div class="center-all">
+                <div class="hero-circle" style="width: 200px; height: 200px; margin-bottom: 40px; background: #fffbeb;">
+                    <ion-icon name="trophy" style="font-size: 6rem; color: #fbbf24;"></ion-icon>
+                </div>
+                <h2 class="slide-title">Conclusion</h2>
+                <p class="slide-subtitle" style="font-size: 2rem; max-width: 900px; margin-top: 20px;">
+                    Hirotix makes hiring <span class="hl gradient-text">Very Fast</span> and <span class="hl gradient-text">Very Easy</span>.
+                </p>
+                <p class="content-text" style="max-width: 800px; margin-top: 20px;">
+                    It helps students get their dream jobs, and helps companies find the best talent without wasting time.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 9: End -->
+        <div class="slide">
+            <div class="center-all">
+                <div class="hero-circle" style="width: 250px; height: 250px; margin-bottom: 40px; background: #fef2f2;">
+                    <ion-icon name="heart" style="font-size: 7rem; color: #ef4444; animation: pulse 2s infinite;"></ion-icon>
+                </div>
+                <h1 class="slide-title gradient-text" style="font-size: 6rem;">Thank You!</h1>
+                <p class="slide-subtitle" style="font-size: 2.5rem; margin-top: 15px;">Any Questions?</p>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="slide-indicator" id="dotsContainer">
+            <!-- Dots will be generated by JS -->
+        </div>
+        
+        <div class="controls">
+            <button class="nav-btn" id="prevBtn" onclick="moveSlide(-1)" title="Previous Slide">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
+            <button class="nav-btn" id="nextBtn" onclick="moveSlide(1)" title="Next Slide">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        // Generate Dots
+        const dotsContainer = document.getElementById('dotsContainer');
+        for(let i=0; i<totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
+        }
+        const dots = document.querySelectorAll('.dot');
+
+        function updatePresentation() {
+            slides.forEach((slide, index) => {
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                    if(index < currentSlideIndex) {
+                        slide.style.transform = 'scale(0.95) translateY(-30px)';
+                    } else {
+                        slide.style.transform = 'scale(0.95) translateY(30px)';
+                    }
+                }
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlideIndex);
+            });
+
+            document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+            document.getElementById('nextBtn').disabled = currentSlideIndex === totalSlides - 1;
+
+            const progress = ((currentSlideIndex + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function moveSlide(direction) {
+            currentSlideIndex += direction;
+            if (currentSlideIndex < 0) currentSlideIndex = 0;
+            if (currentSlideIndex >= totalSlides) currentSlideIndex = totalSlides - 1;
+            updatePresentation();
+        }
+
+        function goToSlide(index) {
+            currentSlideIndex = index;
+            updatePresentation();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                if (currentSlideIndex < totalSlides - 1) moveSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlideIndex > 0) moveSlide(-1);
+            }
+        });
+
+        updatePresentation();
+    </script>
+</body>
+</html>

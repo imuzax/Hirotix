@@ -10,22 +10,23 @@
     background: transparent;
 }
 
-/* Sidebar - Premium Floating Design */
+/* Sidebar - Premium Island Design */
 .sidebar {
     width: 280px;
     height: calc(100vh - 48px);
     position: sticky;
     top: 24px;
-    border-radius: var(--radius-lg);
-    padding: 32px 20px;
+    border-radius: 32px; /* Super rounded for island look */
+    padding: 40px 24px;
     display: flex;
     flex-direction: column;
-    background: var(--surface-bg);
-    backdrop-filter: blur(30px) saturate(180%);
-    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
     border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    box-shadow: 0 20px 50px -10px rgba(16, 42, 67, 0.08);
     transition: var(--transition-smooth);
+    z-index: 100;
 }
 
 .sidebar-logo {
@@ -44,28 +45,30 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 18px;
-    border-radius: var(--radius-md);
+    padding: 14px 20px;
+    border-radius: 18px;
     color: var(--secondary-text);
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: var(--transition-smooth);
     border: 1px solid transparent;
     background: transparent;
     text-align: left;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
 }
 
 .nav-item-btn:hover {
-    background: var(--input-bg);
-    color: var(--primary-text);
-    transform: translateX(5px);
+    background: rgba(0, 122, 255, 0.05);
+    color: var(--accent-color);
+    transform: none;
 }
 
 .nav-item-btn.active {
-    background: var(--accent-color);
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 113, 227, 0.2);
+    background: white;
+    color: var(--accent-color);
+    box-shadow: 0 10px 25px -5px rgba(0, 122, 255, 0.15);
+    border: 1px solid rgba(0, 122, 255, 0.1);
 }
 
 .nav-icon {
@@ -75,13 +78,19 @@
 /* User Profile Mini - Refined */
 .user-profile-mini {
     margin-top: auto;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 24px;
     display: flex;
     align-items: center;
-    gap: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    gap: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: var(--transition-smooth);
+}
+
+.user-profile-mini:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: var(--accent-color);
 }
 
 .user-avatar {
@@ -135,17 +144,18 @@
     box-shadow: 0 8px 16px rgba(229, 57, 53, 0.15);
 }
 
-/* Main Content Area - Better White/Glass Balance */
+/* Main Content Area - Clean & Balanced */
 .main-content {
     flex-grow: 1;
     overflow-y: auto;
-    border-radius: var(--radius-lg);
+    border-radius: 32px;
     padding: 48px;
     height: calc(100vh - 48px);
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.05);
 }
 
 .main-content::-webkit-scrollbar {
@@ -334,3 +344,194 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* --- PREMIUM UI COMPONENTS --- */
+
+/* Stat Cards - Floating Island Style */
+.stat-card-premium {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 28px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: var(--transition-smooth);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card-premium:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 20px 60px -15px rgba(0, 122, 255, 0.15);
+}
+
+.stat-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    background: white;
+    color: var(--accent-color);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-info .stat-value {
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+/* Glass Search Bar */
+.search-wrapper-premium {
+    position: relative;
+    width: 100%;
+}
+
+.search-wrapper-premium ion-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.4rem;
+    color: var(--secondary-text);
+}
+
+.search-control-premium {
+    width: 100%;
+    padding: 16px 20px 16px 54px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    font-size: 1rem;
+    color: var(--primary-text);
+    transition: var(--transition-smooth);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.search-control-premium:focus {
+    outline: none;
+    background: white;
+    border-color: var(--accent-color);
+    box-shadow: 0 12px 48px rgba(0, 122, 255, 0.12);
+}
+
+/* Job Card - Immersive Design */
+.job-card-premium {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 28px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+.job-card-premium:hover {
+    background: white;
+    transform: scale(1.02);
+    box-shadow: 0 30px 70px rgba(0, 113, 227, 0.1);
+    border-color: var(--accent-color);
+}
+
+.job-type-pill {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    background: rgba(0, 122, 255, 0.1);
+    color: var(--accent-color);
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Immersive Job Modal Overhaul */
+.job-modal-expanded {
+    max-width: 900px;
+    width: 95%;
+    border-radius: 40px;
+    padding: 0;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.modal-hero {
+    padding: 60px 50px 40px;
+    background: linear-gradient(180deg, rgba(0, 122, 255, 0.05) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    position: relative;
+}
+
+.modal-hero .modal-close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+
+.job-main-info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.company-logo-large {
+    width: 84px;
+    height: 84px;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--accent-color);
+}
+
+.modal-body-scroll {
+    padding: 40px 50px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.modal-footer-premium {
+    padding: 30px 50px 40px;
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+/* Animations */
+.fade-up {
+    animation: fadeUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+[data-theme="dark"] .stat-card-premium,
+[data-theme="dark"] .job-card-premium,
+[data-theme="dark"] .job-modal-expanded {
+    background: rgba(20, 20, 20, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .stat-icon-wrapper,
+[data-theme="dark"] .company-logo-large {
+    background: #2c2c2e;
+}

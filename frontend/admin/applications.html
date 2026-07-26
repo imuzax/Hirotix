@@ -90,7 +90,7 @@
                     <td>
                         <div style="font-weight: 700;">${app.seeker ? app.seeker.fullName : 'Identity Purged'}</div>
                         <div style="font-size: 0.75rem; color: var(--admin-text-secondary);">${app.seeker ? app.seeker.email : 'No Contact'}</div>
-                        ${app.seeker ? \`<a href="\${getResumeViewUrl(app.seeker.id)}" target="_blank" style="font-size: 0.7rem; color: var(--admin-accent); text-decoration: none; display: flex; align-items: center; gap: 4px; margin-top: 5px;"><ion-icon name="document-outline"></ion-icon> View Resume</a>\` : ''}
+                        ${app.seeker ? `<a href="${getResumeViewUrl(app.seeker.id)}" target="_blank" style="font-size: 0.7rem; color: var(--admin-accent); text-decoration: none; display: flex; align-items: center; gap: 4px; margin-top: 5px;"><ion-icon name="document-outline"></ion-icon> View Resume</a>` : ''}
                     </td>
                     <td>
                         <div style="font-weight: 600; color: var(--admin-accent);">${app.job ? app.job.title : 'Deleted Position'}</div>
@@ -101,11 +101,11 @@
                     </td>
                     <td>
                         <div style="background: rgba(50, 215, 75, 0.1); color: #32D74B; display: inline-block; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.8rem;">
-                            \${app.matchScore ? app.matchScore.toFixed(0) : '0'}% Match
+                            ${app.matchScore ? app.matchScore.toFixed(0) : '0'}% Match
                         </div>
                     </td>
                     <td>
-                        <span class="role-badge \${app.status === 'SHORTLISTED' ? 'role-seeker' : 'role-recruiter'}" style="background: \${app.status === 'REJECTED' ? '#ff3b30' : ''}">\${app.status}</span>
+                        <span class="role-badge ${app.status === 'SHORTLISTED' ? 'role-seeker' : 'role-recruiter'}" style="background: ${app.status === 'REJECTED' ? '#ff3b30' : ''}">${app.status}</span>
                     </td>
                 </tr>
             `).join('');

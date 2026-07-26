@@ -42,4 +42,22 @@ public class JobService {
     public void deleteJob(Long id) {
         jobRepository.deleteById(id);
     }
+
+    public Job updateJob(Long id, Job details) {
+        Job existing = getJobById(id);
+        if (existing != null) {
+            if (details.getTitle() != null) existing.setTitle(details.getTitle());
+            if (details.getCompany() != null) existing.setCompany(details.getCompany());
+            if (details.getLocation() != null) existing.setLocation(details.getLocation());
+            if (details.getDescription() != null) existing.setDescription(details.getDescription());
+            if (details.getResponsibilities() != null) existing.setResponsibilities(details.getResponsibilities());
+            if (details.getRequirements() != null) existing.setRequirements(details.getRequirements());
+            if (details.getQualifications() != null) existing.setQualifications(details.getQualifications());
+            if (details.getSalary() != null) existing.setSalary(details.getSalary());
+            if (details.getJobType() != null) existing.setJobType(details.getJobType());
+            if (details.getExperienceLevel() != null) existing.setExperienceLevel(details.getExperienceLevel());
+            return jobRepository.save(existing);
+        }
+        return null;
+    }
 }

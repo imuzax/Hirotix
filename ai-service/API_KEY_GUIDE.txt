@@ -13,7 +13,7 @@ STEPS:
 5.  Key copy karein.
 6.  Open file:  ai-service/.env
 7.  Replace the line:
-    GROQ_API_KEY=yahan_apni_key_paste_karein
+    GROQ_API_KEY=gsk_YOUR_GROQ_API_KEY_HERE
 
 8.  Restart START_HIROTIX.bat
 

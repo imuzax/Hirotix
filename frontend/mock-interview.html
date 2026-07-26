@@ -21,33 +21,33 @@
         <aside class="chat-sidebar">
             <div class="sidebar-header">
                 <a href="index.html" class="logo-brand">
-                    <div class="brand-icon" style="width: 32px; height: 32px; border-radius: 8px;"></div>
-                    <span class="brand-text" style="font-size: 1.4rem;">Hirotix<span class="brand-dot">.</span></span>
+                    <div class="brand-icon" style="width: 38px; height: 38px; border-radius: 12px; background: var(--accent-gradient)"></div>
+                    <span class="brand-text" style="font-size: 1.6rem; letter-spacing: -0.04em;">Hirotix<span class="brand-dot">.</span></span>
                 </a>
             </div>
 
             <button class="new-chat-btn" onclick="resetChat()">
-                <ion-icon name="add-outline"></ion-icon> New Chat
+                <ion-icon name="add-circle-outline"></ion-icon> New Session
             </button>
 
             <nav class="sidebar-nav">
                 <div class="nav-group">
-                    <div class="nav-label">General</div>
+                    <div class="nav-label">Navigation</div>
                     <a href="seeker-dashboard.html" class="sidebar-btn">
-                        <ion-icon name="apps-outline"></ion-icon> Dashboard
+                        <ion-icon name="grid-outline"></ion-icon> Dashboard
                     </a>
                     <a href="resume-builder.html" class="sidebar-btn">
-                        <ion-icon name="document-text-outline"></ion-icon> Resume Builder
+                        <ion-icon name="document-text-outline"></ion-icon> Builder
                     </a>
                 </div>
 
                 <div class="nav-group">
                     <div class="nav-label">Actions</div>
                     <button class="sidebar-btn" id="downloadChatBtn">
-                        <ion-icon name="download-outline"></ion-icon> Save Conversation
+                        <ion-icon name="cloud-download-outline"></ion-icon> Save Studio
                     </button>
                     <button class="sidebar-btn" onclick="resetChat()" style="color: #ff3b30;">
-                        <ion-icon name="trash-outline"></ion-icon> Clear Memory
+                        <ion-icon name="trash-bin-outline"></ion-icon> Clear History
                     </button>
                 </div>
             </nav>
@@ -55,14 +55,13 @@
             <div class="sidebar-footer">
                 <div class="service-status">
                     <div class="status-dot" id="statusDot"></div>
-                    <span id="statusText">AI Service: Offline</span>
+                    <span id="statusText" style="font-weight: 700; font-size: 0.8rem;">Checking AI Service...</span>
                 </div>
-                <button class="sidebar-btn theme-switcher" id="themeToggle" onclick="toggleTheme()"
-                    style="margin-bottom: 10px;">
-                    <ion-icon name="moon-outline"></ion-icon> Dark Mode
+                <button class="sidebar-btn" id="themeToggle" onclick="toggleTheme()">
+                    <ion-icon name="moon-outline"></ion-icon> <span>Switch Theme</span>
                 </button>
-                <button onclick="logout()" class="sidebar-btn">
-                    <ion-icon name="log-out-outline"></ion-icon> Logout
+                <button onclick="logout()" class="sidebar-btn" style="margin-top: 8px;">
+                    <ion-icon name="log-out-outline"></ion-icon> <span>Sign Out</span>
                 </button>
             </div>
         </aside>
@@ -78,8 +77,8 @@
             <!-- Focused Input Area -->
             <div class="chat-input-container">
                 <form id="chatForm" class="input-box-wrapper">
-                    <input type="text" id="chatInput" class="chat-input-field"
-                        placeholder="Ask anything or start a mock interview..." autocomplete="off" required>
+                    <textarea id="chatInput" class="chat-input-field" 
+                        placeholder="Ask anything or start a mock interview..." rows="1" autocomplete="off" required></textarea>
                     <button type="submit" class="send-trigger" id="sendBtn">
                         <ion-icon name="arrow-up-outline"></ion-icon>
                     </button>
@@ -104,6 +103,20 @@
 
         let chatMessages = [];
 
+        // Auto-expand textarea
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Handle Enter vs Shift+Enter
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.dispatchEvent(new Event('submit'));
+            }
+        });
+
         // Load Memory
         function loadMemory() {
             const saved = localStorage.getItem(`chat_memory_${user.id}`);
@@ -116,7 +129,7 @@
         }
 
         function showInitialGreeting() {
-            const greeting = `Hello **${user.fullName}**! 👋 \n\nI am your **Advanced Hiro AI**. I am now directly connected to the Hirotix Job Database and I have **Conversation Memory**.\n\nYou can ask me:\n1. **"What jobs are available right now?"**\n2. **"Start a mock interview for [Job Name]"**\n3. **"Show me profiles of top jobs"**\n\nHow can I help you today?`;
+            const greeting = `Hello **${user.fullName}**! 👋 \n\nI am your **Advanced Hiro AI**. I am now directly connected to the Hirotix Job Database and I have **Conversation Memory**. Ask me about jobs or start a mock interview!`;
             addAIMessage(greeting);
         }
 
@@ -132,8 +145,10 @@
         function appendUserUI(text) {
             const html = `
                 <div class="message user">
-                    <div class="msg-avatar">U</div>
-                    <div class="message-content">${text}</div>
+                    <div class="msg-avatar">
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                    </div>
+                    <div class="message-content">${text.replace(/\n/g, '<br>')}</div>
                 </div>
             `;
             chatHistory.insertAdjacentHTML('beforeend', html);
@@ -176,13 +191,14 @@
             chatHistory.insertAdjacentHTML('beforeend', html);
             const bubble = document.getElementById(messageId);
 
+            // Improved Word-by-word Typing
             const words = text.split(' ');
             let currentText = '';
             for (let i = 0; i < words.length; i++) {
                 currentText += words[i] + ' ';
                 bubble.innerHTML = marked.parse(currentText);
                 scrollToBottom();
-                await new Promise(r => setTimeout(r, 20));
+                await new Promise(r => setTimeout(r, 40)); // Slightly slower for better feel
             }
             chatMessages.push({ role: 'assistant', content: text });
             saveMemory();
@@ -212,23 +228,27 @@
 
         // Service Health Polling
         async function updateServiceStatus() {
-            const isOnline = await checkServiceHealth();
+            const health = await checkServiceHealth();
             const dot = document.getElementById('statusDot');
             const statusText = document.getElementById('statusText');
             
-            if (isOnline) {
-                dot.classList.add('online');
-                statusText.innerText = 'AI Service: Online';
+            if (health.java && health.python) {
+                dot.style.background = '#34c759';
+                statusText.innerText = 'AI Systems: Active';
                 statusText.style.color = '#34c759';
-            } else {
-                dot.classList.remove('online');
-                statusText.innerText = 'AI Service: Offline';
+            } else if (!health.java) {
+                dot.style.background = '#ff3b30';
+                statusText.innerText = 'Backend: Offline';
                 statusText.style.color = '#ff3b30';
+            } else if (!health.python) {
+                dot.style.background = '#ff9f0a';
+                statusText.innerText = 'AI Engine: Offline';
+                statusText.style.color = '#ff9f0a';
             }
         }
 
         updateServiceStatus();
-        setInterval(updateServiceStatus, 10000); // Check every 10s
+        setInterval(updateServiceStatus, 5000); // Check every 5s for snappy demo
 
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -237,6 +257,7 @@
 
             addUserMessage(message);
             chatInput.value = '';
+            chatInput.style.height = 'auto'; // Reset height
             chatInput.disabled = true;
             sendBtn.disabled = true;
 
