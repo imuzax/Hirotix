@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Messages - Hirotix Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="../js/theme.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body class="admin-mode">
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="brand">
+                <a href="../index.html" class="logo-brand">
+                    <span class="brand-text" style="color: var(--admin-text); font-size: 1.8rem; font-weight: 800;">Hirotix<span class="brand-dot">.</span></span>
+                </a>
+            </div>
+            <nav>
+                <ul class="admin-nav">
+                    <li><a href="index.html" class="admin-nav-item"><ion-icon name="speedometer-outline"></ion-icon> Dashboard</a></li>
+                    <li><a href="users.html" class="admin-nav-item"><ion-icon name="people-outline"></ion-icon> Users</a></li>
+                    <li><a href="jobs.html" class="admin-nav-item"><ion-icon name="briefcase-outline"></ion-icon> Job Board</a></li>
+                    <li><a href="applications.html" class="admin-nav-item"><ion-icon name="document-text-outline"></ion-icon> Applications</a></li>
+                    <li><a href="messages.html" class="admin-nav-item active"><ion-icon name="mail-unread-outline"></ion-icon> Messages</a></li>
+                    <li><a href="analytics.html" class="admin-nav-item"><ion-icon name="stats-chart-outline"></ion-icon> Analytics</a></li>
+                </ul>
+            </nav>
+            <div style="margin-top: auto;">
+                <button onclick="logout()" class="admin-nav-item" style="border: none; background: transparent; cursor: pointer; width: 100%; text-align: left;">
+                    <ion-icon name="log-out-outline"></ion-icon> Log out
+                </button>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header fade-up">
+                <div>
+                    <h1>Contact Queries</h1>
+                    <p style="color: var(--admin-text-secondary);">Direct communications from platform visitors.</p>
+                </div>
+            </header>
+
+            <div class="admin-table-section fade-up" style="animation-delay: 0.1s;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Sender</th>
+                            <th>Contact Details</th>
+                            <th>Subject</th>
+                            <th>Message Preview</th>
+                            <th>Received At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messages-table">
+                        <tr><td colspan="6" style="text-align:center; padding: 40px; color: #555;">Scanning communications...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal-overlay" style="z-index: 1000;">
+        <div class="modal-window" style="max-width: 600px; background: #1a1a1a; color: white; border: 1px solid rgba(255,255,255,0.1);">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <h3 id="modalSubject">Subject</h3>
+                <button class="modal-close" onclick="closeMessageModal()" style="color: white;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
+                    <div id="senderInitial" style="width: 50px; height: 50px; border-radius: 50%; background: var(--admin-accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem;">H</div>
+                    <div>
+                        <h4 id="senderName" style="margin: 0; font-size: 1.1rem;">Hussain Muzaffar</h4>
+                        <p id="senderEmail" style="margin: 0; color: var(--admin-text-secondary); font-size: 0.9rem;">hussain@example.com</p>
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); line-height: 1.6;">
+                    <p id="fullMessage" style="margin: 0; white-space: pre-wrap;">Message content goes here...</p>
+                </div>
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                    <a id="replyEmail" href="#" class="btn btn-accent" style="padding: 10px 20px; border-radius: 8px; text-decoration: none;">Reply via Email</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="js/messages.js"></script>
+    <script>
+        const user = getCurrentUser();
+        if(!user || user.role !== 'ADMIN') window.location.href = 'login.html';
+
+        function logout() {
+            localStorage.removeItem('hirotix_user');
+            window.location.href = 'login.html';
+        }
+
+        function closeMessageModal() {
+            document.getElementById('messageModal').classList.remove('active');
+        }
+
+        // Close on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('messageModal');
+            if (event.target == modal) {
+                closeMessageModal();
+            }
+        }
+    </script>
+</body>
+</html>
